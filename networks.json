@@ -1,0 +1,50 @@
+{
+  "mainnet": {
+    "Contract": {
+      "address": "0xbddE35780e3986a47e54a580017d8213f0D2bB84",
+      "startBlock": 12544441
+    },
+    "Contract1": {
+      "address": "0xCf1f5270916E41f5cf4221F68798438c3E5404E6",
+      "startBlock": 13050778
+    },
+    "Contract2": {
+      "address": "0x51C6EF4D909Cd3933E8B73734AF9Ee87AA745771",
+      "startBlock": 12589859
+    },
+    "Contract3": {
+      "address": "0xFA1A2e457484aD9b991c035e718ee23d45049428",
+      "startBlock": 12650521
+    },
+    "Contract4": {
+      "address": "0xe634160eeb1e5667621b4fe328E89D9Cb905235E",
+      "startBlock": 12813303 
+    },
+    "Contract5": {
+      "address": "0x82B26de8227E23014c6F29f7fBbc20EE8BE794A9",
+      "startBlock": 14202384 
+    },
+    "Contract6": {
+      "address": "0x2ffd9AD26E0440970B74e02116102080D3e0Acb9",
+      "startBlock": 13183835
+    },
+    "Contract7": {
+      "address": "0xbe2057bAC4157Bba00759f61dacB08A64F703C2d",
+      "startBlock": 14202564
+    },
+    "Contract8": {
+      "address": "0x1abD8b5194D733691D64c3F898300f88Ba0035d5",
+      "startBlock": 14412543
+    }
+  },
+  "optimism": {
+    "Contract": {
+      "address": "0xbA4AccD78ef2E4E05AA89DE24E5072a5222B0F0a",
+      "startBlock": 4198027
+    },
+    "Contract1": {
+      "address": "0x0018453cA52d1d71458ad1Ad48A5560A51a94601",
+      "startBlock": 4788460
+    }
+  }
+}

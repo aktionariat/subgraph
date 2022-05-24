@@ -1,0 +1,20 @@
+{
+  "name": "brokerbot",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ rube-de/brokerbot",
+    "deploy-op": "graph deploy --node https://api.thegraph.com/deploy/ rube-de/brokerbot-optimism",
+    "create-local": "graph create --node http://localhost:8020/ rube-de/brokerbot",
+    "remove-local": "graph remove --node http://localhost:8020/ rube-de/brokerbot",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 rube-de/brokerbot",
+    "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
+    "prepare:optimism": "mustache config/optimism.json subgraph-optimism.template.yaml > subgraph.yaml"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.29.0",
+    "@graphprotocol/graph-ts": "0.26.0",
+    "mustache": "^4.2.0"
+  }
+}

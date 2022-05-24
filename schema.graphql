@@ -1,0 +1,124 @@
+type Registry @entity {
+  # registry address
+  id: ID!
+  # amount of pools created
+  marketCount: BigInt!
+  # amoutn of transactions all time
+  txCount: BigInt!
+  # total volume all time in USD
+  totalVolumeUSD: BigDecimal!
+  # total volume all time in XCHF
+  totalVolumeXCHF: BigDecimal!
+  # TVL in USD
+  totalValueLockedUSD: BigDecimal!
+  # TVL in XCHF
+  totalValueLockedXCHF: BigDecimal!
+  # raised
+  totalRaisedXCHF: BigDecimal!
+  totalRaisedUSD: BigDecimal!
+
+  # current owner of the registry
+  owner: ID!
+}
+
+type Token @entity {
+  # token address
+  id: ID!
+  # token symbol
+  symbol: String!
+  # token name
+  name: String!
+  # token decimals
+  decimals: BigInt!
+  # token total supply
+  totalSupply: BigInt!
+  # volume in token units
+  tradeVolume: BigDecimal!
+  # volume in derived USD
+  tradeVolumeUSD: BigDecimal!
+  # transactions count
+  txCount: BigInt!
+  # liquidity in token units
+  totalValueLocked: BigDecimal!
+  # liquidity in derived USD
+  totalValueLockedUSD: BigDecimal!
+  # derived price in ETH
+  derivedETH: BigDecimal!
+}
+
+type Market @entity {
+  # market address
+  id: ID!
+
+  # mirrored from the smart contract
+  base: Token!
+  token: Token!
+  reserveBase: BigDecimal!
+  reserveToken: BigDecimal!
+  totalSupply: BigDecimal!
+  
+  # calculated liquidity
+  totalValueLockedXCHF: BigDecimal!
+  totalValueLockedUSD: BigDecimal!
+
+  # Price in terms of the asset market
+  basePrice: BigDecimal!
+  tokenPrice: BigDecimal!
+
+  # lifetime volume stats
+  volumeBase: BigDecimal!
+  volumeToken: BigDecimal!
+  volumeUSD: BigDecimal!
+  txCount: BigInt!
+
+  # raised
+  totalRaisedXCHF: BigDecimal!
+  totalRaisedUSD: BigDecimal!
+}
+
+type Transaction @entity {
+  # txn hash
+  id: ID!
+  # block txn was included in
+  blockNumber: BigInt!
+  # timestamp txn was confirmed
+  timestamp: BigInt!
+  # gas used during txn execution
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+  # derived values
+  swap: Swap!
+}
+
+type Swap @entity {
+  # transaction hash + "#" + index in swaps Transaction array
+  id: ID!
+  # pointer to transaction
+  transaction: Transaction!
+  # timestamp of transaction
+  timestamp: BigInt!
+  # pool swap occured within
+  market: Market!
+  # allow indexing by tokens
+  base: Token!
+  # allow indexing by tokens
+  token: Token!
+  # sender of the swap
+  sender: Bytes!
+  # delta of base swapped
+  amountBase: BigDecimal!
+  # delta of tokenToken swapped
+  amountToken: BigDecimal!
+  # derived info
+  amountUSD: BigDecimal!
+  # The price of the market after the swap
+  newPriceBase: BigDecimal!
+  # The average paid price
+  avgPriceBase: BigDecimal!
+  # The price of the market after the swap in USD
+  newPriceUSD: BigDecimal!
+  # The average paid price in USD
+  avgPriceUSD: BigDecimal!
+  # index within the txn
+  logIndex: BigInt
+}
