@@ -1,6 +1,14 @@
 import { Address, TypedMap } from "@graphprotocol/graph-ts";
 
-export const NETWORK_STRING = "mainnet";
+export const NETWORK_STRING = "optimism";
+
+///////////////////////////////////////////////////////////////////////////
+////////////////////// BROKERBOT REGISTRY CONTRACT ////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+export const BROKERBOT_REGISTRY_CONTRACT_ADDRESSES = Address.fromString(
+  "0x2C9b9b9143A9Ef5051A299EF3CC8039b06927093"
+);
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////// UNISWAP CONTRACT ////////////////////////////
@@ -15,7 +23,7 @@ export const UNISWAP_QUOTER_CONTRACT_ADDRESSES = Address.fromString(
 ///////////////////////////////////////////////////////////////////////////
 
 export const CHAIN_LINK_CONTRACT_ADDRESS = Address.fromString(
-  "0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf"
+  "0x0000000000000000000000000000000000000000"
 );
 
 ///////////////////////////////////////////////////////////////////////////
@@ -25,33 +33,33 @@ export const CHAIN_LINK_CONTRACT_ADDRESS = Address.fromString(
 export const WHITELIST_TOKENS = new TypedMap<string, Address>();
 WHITELIST_TOKENS.set(
   "WETH",
-  Address.fromString("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")
-);
-WHITELIST_TOKENS.set(
-  "USDT",
-  Address.fromString("0xdac17f958d2ee523a2206206994597c13d831ec7")
-);
-WHITELIST_TOKENS.set(
-  "DAI",
-  Address.fromString("0x6b175474e89094c44da98b954eedeac495271d0f")
-);
-WHITELIST_TOKENS.set(
-  "USDC",
-  Address.fromString("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")
+  Address.fromString("0x4200000000000000000000000000000000000006")
 );
 WHITELIST_TOKENS.set(
   "ETH",
   Address.fromString("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE")
 );
 WHITELIST_TOKENS.set(
-  "WBTC",
-  Address.fromString("0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599")
+  "USDT",
+  Address.fromString("0x94b008aA00579c1307B0EF2c499aD98a8ce58e58")
 );
 WHITELIST_TOKENS.set(
-  "EURS",
-  Address.fromString("0xdB25f211AB05b1c97D595516F45794528a807ad8")
+  "DAI",
+  Address.fromString("0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1")
+);
+WHITELIST_TOKENS.set(
+  "USDC",
+  Address.fromString("0x7F5c764cBc14f9669B88837ca1490cCa17c31607")
+);
+WHITELIST_TOKENS.set(
+  "WBTC",
+  Address.fromString("0x68f180fcCe6836688e9084f035309E29Bf0A2095")
 );
 WHITELIST_TOKENS.set(
   "LINK",
-  Address.fromString("0x514910771AF9Ca656af840dff83E8264EcF986CA")
+  Address.fromString("0x350a791Bfc2C21F9Ed5d10980Dad2e2638ffa7f6")
+);
+WHITELIST_TOKENS.set(
+  "CRV",
+  Address.fromString("0x0000000000000000000000000000000000000000")
 );
