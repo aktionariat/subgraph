@@ -1,22 +1,22 @@
 /* eslint-disable prefer-const */
 import { log, BigInt, BigDecimal, Address, dataSource } from '@graphprotocol/graph-ts'
-import { ERC20 } from '../generated/Contract/ERC20'
-import { ERC20SymbolBytes } from '../generated/Contract/ERC20SymbolBytes'
-import { ERC20NameBytes } from '../generated/Contract/ERC20NameBytes'
-import { AggregatorV3Interface } from '../generated/Contract/AggregatorV3Interface'
+import { ERC20 } from '../generated/Brokerbot/ERC20'
+import { ERC20SymbolBytes } from '../generated/Brokerbot/ERC20SymbolBytes'
+import { ERC20NameBytes } from '../generated/Brokerbot/ERC20NameBytes'
+import { AggregatorV3Interface } from '../generated/Brokerbot/AggregatorV3Interface'
 import { StaticTokenDefinition } from './staticTokenDefinition'
 import {   
-  Market,
+  Brokerbot,
   Registry,
   Token
 } from "../generated/schema"
-import * as constants from "./prices/common/constants";
-import { CustomPriceType } from "./prices/common/types";
-import { getPriceDai as getPriceDaiUniswap } from "./prices/quoters/UniswapQuoter";
+import * as constants from "./utils/common/constants";
+import { CustomPriceType } from "./utils/common/types";
+import { getPriceDai as getPriceDaiUniswap } from "./utils/quoters/UniswapQuoter";
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
 export const OWNER_ADDRESS = '0xbddE35780e3986a47e54a580017d8213f0D2bB84'
-export const REGISTRY_ADDRESS = Address.fromString("0x2C9b9b9143A9Ef5051A299EF3CC8039b06927093")
+export const REGISTRY_ADDRESS = Address.fromString(constants.UNISWAP_QUOTER_CONTRACT_ADDRESSES_MAP.get(dataSource.network())!.toHexString())
 export const CHAINLINK_FEED_REGISTRY_ADDRESS:Address = Address.fromString("0x449d117117838fFA61263B61dA6301AA2a88B13A")
 //export const CHAINLINK_FEED_REGISTRY_ADDRESS:Address = Address.fromString("0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf")
 export const CHAIN_LINK_USD_ADDRESS = Address.fromString("0x0000000000000000000000000000000000000348")
@@ -32,12 +32,12 @@ export let BI_18 = BigInt.fromI32(18)
 
 export class Entities {
   registry: Registry
-  market: Market
+  brokerbot: Brokerbot
   base: Token
   token: Token
-  constructor(_r:Registry, _m:Market, _b:Token, _t:Token){
+  constructor(_r:Registry, _m:Brokerbot, _b:Token, _t:Token){
     this.registry = _r 
-    this.market = _m
+    this.brokerbot = _m
     this.base = _b
     this.token = _t
   }
@@ -222,17 +222,17 @@ export function getEntities(
   let registry = getRegistry(registryAddress.toHexString())
 
   // load market
-  let market = Market.load(marketAddress.toHexString())
-  if (market === null) {
-    market = new Market(marketAddress.toHexString())
-    market.base = baseAddress.toHexString()
-    market.token = tokenAddress.toHexString()
+  let brokerbot = Brokerbot.load(marketAddress.toHexString())
+  if (brokerbot === null) {
+    brokerbot = new Brokerbot(marketAddress.toHexString())
+    brokerbot.base = baseAddress.toHexString()
+    brokerbot.token = tokenAddress.toHexString()
     registry.marketCount = registry.marketCount.plus(ONE_BI)
   }
 
   // load the tokens
-  let base = Token.load(market.base)
-  let token = Token.load(market.token)
+  let base = Token.load(brokerbot.base)
+  let token = Token.load(brokerbot.token)
 
   //fetch info if null
   if (base === null) {
@@ -263,7 +263,7 @@ export function getEntities(
     token.totalValueLocked = ZERO_BD
     token.txCount = ZERO_BI
   }
-  const entities  = new Entities(registry,market,base,token)
+  const entities  = new Entities(registry,brokerbot,base,token)
   return entities
 }
 

@@ -4,7 +4,7 @@ import {
 } from "../generated/Brokerbot/Brokerbot"
 import {   
   Registry,
-  Market,
+  Brokerbot,
   Token,
   Transaction,
   Swap as SwapEvent 
@@ -25,6 +25,7 @@ import {
   ONE_BD,
   getRegistry
 } from './helpers'
+import { updateAktionariatDayData, updateBrokerbotDayData, updateBrokerbotHourData } from "./utils/intervalUpdates"
 
 export function handleTrade(event: Trade): void {
   // load registry
@@ -32,17 +33,17 @@ export function handleTrade(event: Trade): void {
 
   // load market
   const MARKET_ADDRESS = event.address.toHexString()
-  let market = Market.load(MARKET_ADDRESS)
-  if (market === null) {
-    market = new Market(MARKET_ADDRESS)
-    market.base = event.params.base.toHexString()
-    market.token = event.params.token.toHexString()
+  let brokerbot = Brokerbot.load(MARKET_ADDRESS)
+  if (brokerbot === null) {
+    brokerbot = new Brokerbot(MARKET_ADDRESS)
+    brokerbot.base = event.params.base.toHexString()
+    brokerbot.token = event.params.token.toHexString()
     registry.marketCount = registry.marketCount.plus(ONE_BI)
   }
 
   // load the tokens
-  let base = Token.load(market.base)
-  let token = Token.load(market.token)
+  let base = Token.load(brokerbot.base)
+  let token = Token.load(brokerbot.token)
 
   //fetch info if null
   if (base === null) {
@@ -79,15 +80,15 @@ export function handleTrade(event: Trade): void {
   let amountUSD = convertToUsd(base.id, amountBase)
 
   // reset total liquidity amounts
-  base.totalValueLocked = base.totalValueLocked.minus(market.reserveBase)
-  token.totalValueLocked = token.totalValueLocked.minus(market.reserveToken)
-  registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.minus(market.totalValueLockedXCHF)
-  registry.totalRaisedXCHF = registry.totalRaisedXCHF.minus(market.totalRaisedXCHF)
-  registry.totalRaisedUSD = registry.totalRaisedUSD.minus(market.totalRaisedUSD)
+  base.totalValueLocked = base.totalValueLocked.minus(brokerbot.reserveBase)
+  token.totalValueLocked = token.totalValueLocked.minus(brokerbot.reserveToken)
+  registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.minus(brokerbot.totalValueLockedXCHF)
+  registry.totalRaisedXCHF = registry.totalRaisedXCHF.minus(brokerbot.totalRaisedXCHF)
+  registry.totalRaisedUSD = registry.totalRaisedUSD.minus(brokerbot.totalRaisedUSD)
 
   // get current market balance
-  let marketBaseBalance  = convertTokenToDecimal(fetchTokenBalance(event.params.base, Address.fromString(market.id)), base.decimals)
-  let marketTokenBalance = convertTokenToDecimal(fetchTokenBalance(event.params.token, Address.fromString(market.id)), token.decimals)
+  let marketBaseBalance  = convertTokenToDecimal(fetchTokenBalance(event.params.base, Address.fromString(brokerbot.id)), base.decimals)
+  let marketTokenBalance = convertTokenToDecimal(fetchTokenBalance(event.params.token, Address.fromString(brokerbot.id)), token.decimals)
 
   // update base global volume and token liquidity stats
   base.tradeVolume = base.tradeVolume.plus(amountBase)
@@ -99,7 +100,7 @@ export function handleTrade(event: Trade): void {
   token.tradeVolume = token.tradeVolume.plus(amountToken)
   token.tradeVolumeUSD = base.tradeVolumeUSD.plus(amountUSD)
   token.totalValueLocked = token.totalValueLocked.plus(marketTokenBalance)
-  token.totalValueLockedUSD = convertToUsd(base.id, token.totalValueLocked.times(market.basePrice))
+  token.totalValueLockedUSD = convertToUsd(base.id, token.totalValueLocked.times(brokerbot.basePrice))
 
   // update txn counts
   base.txCount = base.txCount.plus(ONE_BI)
@@ -107,33 +108,33 @@ export function handleTrade(event: Trade): void {
 
   
   // update market data
-  market.volumeBase = market.volumeBase.plus(amountBase)
-  market.volumeToken = market.volumeToken.plus(amountToken)
-  market.volumeUSD = market.volumeUSD.plus(amountUSD)
-  market.txCount = market.txCount.plus(ONE_BI)
-  market.reserveBase = marketBaseBalance
-  market.reserveToken = marketTokenBalance
-  market.basePrice = convertTokenToDecimal(event.params.newprice, base.decimals)
-  market.tokenPrice = ONE_BD.div(market.basePrice)
-  market.totalValueLockedXCHF = marketBaseBalance.plus(marketTokenBalance.times(market.basePrice))
-  market.totalValueLockedUSD = convertToUsd(base.id, market.totalValueLockedXCHF)
+  brokerbot.volumeBase = brokerbot.volumeBase.plus(amountBase)
+  brokerbot.volumeToken = brokerbot.volumeToken.plus(amountToken)
+  brokerbot.volumeUSD = brokerbot.volumeUSD.plus(amountUSD)
+  brokerbot.txCount = brokerbot.txCount.plus(ONE_BI)
+  brokerbot.reserveBase = marketBaseBalance
+  brokerbot.reserveToken = marketTokenBalance
+  brokerbot.basePrice = convertTokenToDecimal(event.params.newprice, base.decimals)
+  brokerbot.tokenPrice = ONE_BD.div(brokerbot.basePrice)
+  brokerbot.totalValueLockedXCHF = marketBaseBalance.plus(marketTokenBalance.times(brokerbot.basePrice))
+  brokerbot.totalValueLockedUSD = convertToUsd(base.id, brokerbot.totalValueLockedXCHF)
   if (event.params.amount > ZERO_BI) {
-    market.totalRaisedXCHF = market.totalRaisedXCHF.plus(amountBase)
-    market.totalRaisedUSD = market.totalRaisedUSD.plus(convertToUsd(base.id, amountBase))
+    brokerbot.totalRaisedXCHF = brokerbot.totalRaisedXCHF.plus(amountBase)
+    brokerbot.totalRaisedUSD = brokerbot.totalRaisedUSD.plus(convertToUsd(base.id, amountBase))
   }
   
   // update data of registry
   registry.txCount = registry.txCount.plus(ONE_BI)
   registry.totalVolumeXCHF = registry.totalVolumeXCHF.plus(amountBase)
   registry.totalVolumeUSD = convertToUsd(base.id, registry.totalVolumeXCHF)
-  registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.plus(market.totalValueLockedXCHF)
+  registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.plus(brokerbot.totalValueLockedXCHF)
   registry.totalValueLockedUSD = convertToUsd(base.id, registry.totalValueLockedXCHF)
-  registry.totalRaisedXCHF = registry.totalRaisedXCHF.plus(market.totalRaisedXCHF)
-  registry.totalRaisedUSD = registry.totalRaisedUSD.plus(market.totalRaisedUSD)
+  registry.totalRaisedXCHF = registry.totalRaisedXCHF.plus(brokerbot.totalRaisedXCHF)
+  registry.totalRaisedUSD = registry.totalRaisedUSD.plus(brokerbot.totalRaisedUSD)
 
   // save entities
   registry.save()
-  market.save()
+  brokerbot.save()
   base.save()
   token.save()
 
@@ -150,7 +151,7 @@ export function handleTrade(event: Trade): void {
 
   // update swap event
   swap.transaction = transaction.id
-  swap.market = market.id
+  swap.brokerbot = brokerbot.id
   swap.timestamp = transaction.timestamp
   swap.transaction = transaction.id
   swap.sender = event.params.who
@@ -167,5 +168,27 @@ export function handleTrade(event: Trade): void {
   // update the transaction
   transaction.swap = swap.id
   transaction.save()
+
+  // interval data
+  let aktionariatDayData = updateAktionariatDayData(event)
+  let brokerbotDayData = updateBrokerbotDayData(event)
+  let brokerbotHourData = updateBrokerbotHourData(event)
+
+  // update volume metrics
+  aktionariatDayData.volumeXCHF = aktionariatDayData.volumeXCHF.plus(amountBase)
+  aktionariatDayData.volumeUSD = aktionariatDayData.volumeUSD.plus(amountUSD)
+
+  brokerbotDayData.volumeBase = brokerbotDayData.volumeBase.plus(amountBase)
+  brokerbotDayData.volumeToken = brokerbotDayData.volumeToken.plus(amountToken)
+  brokerbotDayData.volumeUSD = brokerbotDayData.volumeUSD.plus(amountUSD)
+
+  brokerbotHourData.volumeBase = brokerbotHourData.volumeBase.plus(amountBase)
+  brokerbotHourData.volumeToken = brokerbotHourData.volumeToken.plus(amountToken)
+  brokerbotHourData.volumeUSD = brokerbotHourData.volumeUSD.plus(amountUSD)
+
+  // save
+  aktionariatDayData.save()
+  brokerbotDayData.save()
+  brokerbotHourData.save()
 
 }

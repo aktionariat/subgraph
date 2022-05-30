@@ -5,10 +5,8 @@ import {
   SyncBrokerbot
 } from "../generated/BrokerbotRegistry/BrokerbotRegistry"
 import {   
-  Registry,
-  Market,
+  Brokerbot,
   Token,
-  Transaction
 } from "../generated/schema"
 import {
   fetchTokenBalance,
@@ -16,7 +14,6 @@ import {
   convertToUsd,
   getRegistry,
   getEntities,
-  Entities
 } from './helpers'
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
@@ -28,14 +25,9 @@ export function handleOwnershipTransferred(event: OwnershipTransferred): void {
 
 export function handleRegisterBrokerbot(event: RegisterBrokerbot): void {
   const entities = getEntities(event.address, event.params.brokerbot, event.params.base, event.params.token)
-  // save entities
-  //registry.save()
-  //market.save()
-  //base.save()
-  //token.save()
-  
+  // save entities  
   entities.registry.save()
-  entities.market.save()
+  entities.brokerbot.save()
   entities.base.save()
   entities.token.save()
   
@@ -44,39 +36,39 @@ export function handleRegisterBrokerbot(event: RegisterBrokerbot): void {
 
 export function handleSyncBrokerbot(event: SyncBrokerbot): void {
   let registry = getRegistry(event.address.toHexString())
-  let market = Market.load(event.params.brokerbot.toHexString())
+  let brokerbot = Brokerbot.load(event.params.brokerbot.toHexString())
   // only sync if brokerbot exists
-  if (market !== null) {
-    let base = Token.load(market.base)
-    let token = Token.load(market.token)
+  if (brokerbot !== null) {
+    let base = Token.load(brokerbot.base)
+    let token = Token.load(brokerbot.token)
     if (base !== null && token !== null) {
       // get current market balance
-      const marketBaseBalance  = convertTokenToDecimal(fetchTokenBalance(Address.fromString(base.id), Address.fromString(market.id)), base.decimals)
-      const marketTokenBalance = convertTokenToDecimal(fetchTokenBalance(Address.fromString(token.id), Address.fromString(market.id)), token.decimals)
+      const marketBaseBalance  = convertTokenToDecimal(fetchTokenBalance(Address.fromString(base.id), Address.fromString(brokerbot.id)), base.decimals)
+      const marketTokenBalance = convertTokenToDecimal(fetchTokenBalance(Address.fromString(token.id), Address.fromString(brokerbot.id)), token.decimals)
 
       // reset total liquidity amounts
-      base.totalValueLocked = base.totalValueLocked.minus(market.reserveBase)
-      token.totalValueLocked = token.totalValueLocked.minus(market.reserveToken)
-      registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.minus(market.totalValueLockedXCHF)
+      base.totalValueLocked = base.totalValueLocked.minus(brokerbot.reserveBase)
+      token.totalValueLocked = token.totalValueLocked.minus(brokerbot.reserveToken)
+      registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.minus(brokerbot.totalValueLockedXCHF)
 
       // update stats
       base.totalValueLocked = base.totalValueLocked.plus(marketBaseBalance)
       base.totalValueLockedUSD = convertToUsd(base.id, base.totalValueLocked)
 
       token.totalValueLocked = token.totalValueLocked.plus(marketTokenBalance)
-      token.totalValueLockedUSD = convertToUsd(base.id, token.totalValueLocked.times(market.basePrice))
+      token.totalValueLockedUSD = convertToUsd(base.id, token.totalValueLocked.times(brokerbot.basePrice))
 
-      market.reserveBase = marketBaseBalance
-      market.reserveToken = marketTokenBalance
-      market.totalValueLockedXCHF = marketBaseBalance.plus(marketTokenBalance.times(market.basePrice))
-      market.totalValueLockedUSD = convertToUsd(base.id, market.totalValueLockedXCHF)
+      brokerbot.reserveBase = marketBaseBalance
+      brokerbot.reserveToken = marketTokenBalance
+      brokerbot.totalValueLockedXCHF = marketBaseBalance.plus(marketTokenBalance.times(brokerbot.basePrice))
+      brokerbot.totalValueLockedUSD = convertToUsd(base.id, brokerbot.totalValueLockedXCHF)
 
-      registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.plus(market.totalValueLockedXCHF)
+      registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.plus(brokerbot.totalValueLockedXCHF)
       registry.totalValueLockedUSD = convertToUsd(base.id, registry.totalValueLockedXCHF)
 
       // save entities
       registry.save()
-      market.save()
+      brokerbot.save()
       base.save()
       token.save()
     }
