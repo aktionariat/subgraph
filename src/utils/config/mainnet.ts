@@ -63,3 +63,7 @@ WHITELIST_TOKENS.set(
   "LINK",
   Address.fromString("0x514910771AF9Ca656af840dff83E8264EcF986CA")
 );
+WHITELIST_TOKENS.set(
+  "XCHF",
+  Address.fromString("0xB4272071eCAdd69d933AdcD19cA99fe80664fc08")
+);
