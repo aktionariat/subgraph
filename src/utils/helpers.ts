@@ -1,22 +1,22 @@
 /* eslint-disable prefer-const */
 import { log, BigInt, BigDecimal, Address, dataSource } from '@graphprotocol/graph-ts'
-import { ERC20 } from '../generated/Brokerbot/ERC20'
-import { ERC20SymbolBytes } from '../generated/Brokerbot/ERC20SymbolBytes'
-import { ERC20NameBytes } from '../generated/Brokerbot/ERC20NameBytes'
-import { AggregatorV3Interface } from '../generated/Brokerbot/AggregatorV3Interface'
-import { StaticTokenDefinition } from './staticTokenDefinition'
+import { ERC20 } from '../../generated/Brokerbot/ERC20'
+import { ERC20SymbolBytes } from '../../generated/Brokerbot/ERC20SymbolBytes'
+import { ERC20NameBytes } from '../../generated/Brokerbot/ERC20NameBytes'
+import { AggregatorV3Interface } from '../../generated/Brokerbot/AggregatorV3Interface'
+import { StaticTokenDefinition } from '../staticTokenDefinition'
 import {   
   Brokerbot,
   Registry,
   Token
-} from "../generated/schema"
-import * as constants from "./utils/common/constants";
-import { CustomPriceType } from "./utils/common/types";
-import { getPriceDai as getPriceDaiUniswap } from "./utils/quoters/UniswapQuoter";
+} from "../../generated/schema"
+import * as constants from "./common/constants";
+import { CustomPriceType } from "./common/types";
+import { getPriceDai as getPriceDaiUniswap } from "./quoters/UniswapQuoter";
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
 export const OWNER_ADDRESS = '0xbddE35780e3986a47e54a580017d8213f0D2bB84'
-export const REGISTRY_ADDRESS = Address.fromString(constants.UNISWAP_QUOTER_CONTRACT_ADDRESSES_MAP.get(dataSource.network())!.toHexString())
+export const REGISTRY_ADDRESS = Address.fromString(constants.BROKERBOT_REGISTRY_CONTRACT_ADDRESSES_MAP.get(dataSource.network())!.toHexString())
 export const CHAINLINK_FEED_REGISTRY_ADDRESS:Address = Address.fromString("0x449d117117838fFA61263B61dA6301AA2a88B13A")
 //export const CHAINLINK_FEED_REGISTRY_ADDRESS:Address = Address.fromString("0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf")
 export const CHAIN_LINK_USD_ADDRESS = Address.fromString("0x0000000000000000000000000000000000000348")
@@ -242,7 +242,7 @@ export function getEntities(
     base.totalSupply = fetchTokenTotalSupply(baseAddress)
     base.decimals = fetchTokenDecimals(baseAddress)
 
-    base.derivedETH = ZERO_BD
+    base.derivedXCHF = ZERO_BD
     base.tradeVolume = ZERO_BD
     base.tradeVolumeUSD = ZERO_BD
     base.totalValueLocked = ZERO_BD
@@ -257,7 +257,7 @@ export function getEntities(
     token.totalSupply = fetchTokenTotalSupply(tokenAddress)
     token.decimals = fetchTokenDecimals(tokenAddress)
 
-    token.derivedETH = ZERO_BD
+    token.derivedXCHF = ZERO_BD
     token.tradeVolume = ZERO_BD
     token.tradeVolumeUSD = ZERO_BD
     token.totalValueLocked = ZERO_BD

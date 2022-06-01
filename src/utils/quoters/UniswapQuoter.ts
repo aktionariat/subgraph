@@ -5,7 +5,7 @@ import { Address, BigInt, Bytes, ethereum,log } from "@graphprotocol/graph-ts";
 import { UniswapQuoter as UniswapQuoterContract } from "../../../generated/Brokerbot/UniswapQuoter";
 import {
   fetchTokenDecimals
-} from '../../helpers'
+} from '../helpers'
 
 
 export function getPriceDai(tokenAddress: Address, network: string): CustomPriceType {
