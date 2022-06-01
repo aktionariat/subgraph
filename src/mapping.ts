@@ -1,7 +1,5 @@
 import { Address, log} from "@graphprotocol/graph-ts"
-import {
-  Trade
-} from "../generated/Brokerbot/Brokerbot"
+import {  Trade } from "../generated/Brokerbot/Brokerbot"
 import {   
   Registry,
   Brokerbot,
@@ -21,11 +19,10 @@ import {
   convertTokenToDecimal,
   convertToUsd,
   REGISTRY_ADDRESS,
-  OWNER_ADDRESS,
   ONE_BD,
   getRegistry
-} from './helpers'
-import { updateAktionariatDayData, updateBrokerbotDayData, updateBrokerbotHourData } from "./utils/intervalUpdates"
+} from './utils/helpers'
+import { updateAktionariatDayData, updateBrokerbotDayData, updateBrokerbotHourData, updateTokenDayData, updateTokenHourData } from "./utils/intervalUpdates"
 
 export function handleTrade(event: Trade): void {
   // load registry
@@ -53,7 +50,7 @@ export function handleTrade(event: Trade): void {
     base.totalSupply = fetchTokenTotalSupply(event.params.base)
     base.decimals = fetchTokenDecimals(event.params.base)
 
-    base.derivedETH = ZERO_BD
+    base.derivedXCHF = ONE_BD
     base.tradeVolume = ZERO_BD
     base.tradeVolumeUSD = ZERO_BD
     base.totalValueLocked = ZERO_BD
@@ -68,7 +65,7 @@ export function handleTrade(event: Trade): void {
     token.totalSupply = fetchTokenTotalSupply(event.params.token)
     token.decimals = fetchTokenDecimals(event.params.token)
 
-    token.derivedETH = ZERO_BD
+    token.derivedXCHF = ZERO_BD
     token.tradeVolume = ZERO_BD
     token.tradeVolumeUSD = ZERO_BD
     token.totalValueLocked = ZERO_BD
@@ -94,12 +91,14 @@ export function handleTrade(event: Trade): void {
   base.tradeVolume = base.tradeVolume.plus(amountBase)
   base.tradeVolumeUSD = base.tradeVolumeUSD.plus(amountUSD)
   base.totalValueLocked = base.totalValueLocked.plus(marketBaseBalance)
+  base.totalValueLockedXCHF = base.totalValueLocked
   base.totalValueLockedUSD = convertToUsd(base.id, base.totalValueLocked)
 
   // update token global volume and token liquidity stats
   token.tradeVolume = token.tradeVolume.plus(amountToken)
   token.tradeVolumeUSD = base.tradeVolumeUSD.plus(amountUSD)
   token.totalValueLocked = token.totalValueLocked.plus(marketTokenBalance)
+  token.totalValueLockedXCHF = token.totalValueLocked.times(brokerbot.basePrice)
   token.totalValueLockedUSD = convertToUsd(base.id, token.totalValueLocked.times(brokerbot.basePrice))
 
   // update txn counts
@@ -122,6 +121,7 @@ export function handleTrade(event: Trade): void {
     brokerbot.totalRaisedXCHF = brokerbot.totalRaisedXCHF.plus(amountBase)
     brokerbot.totalRaisedUSD = brokerbot.totalRaisedUSD.plus(convertToUsd(base.id, amountBase))
   }
+  token.derivedXCHF = brokerbot.basePrice
   
   // update data of registry
   registry.txCount = registry.txCount.plus(ONE_BI)
@@ -173,6 +173,10 @@ export function handleTrade(event: Trade): void {
   let aktionariatDayData = updateAktionariatDayData(event)
   let brokerbotDayData = updateBrokerbotDayData(event)
   let brokerbotHourData = updateBrokerbotHourData(event)
+  let tokenDayData = updateTokenDayData(token, event)
+  let baseDayData = updateTokenDayData(base, event)
+  let tokenHourData = updateTokenHourData(token, event)
+  let baseHourData = updateTokenHourData(base, event)
 
   // update volume metrics
   aktionariatDayData.volumeXCHF = aktionariatDayData.volumeXCHF.plus(amountBase)
@@ -185,6 +189,22 @@ export function handleTrade(event: Trade): void {
   brokerbotHourData.volumeBase = brokerbotHourData.volumeBase.plus(amountBase)
   brokerbotHourData.volumeToken = brokerbotHourData.volumeToken.plus(amountToken)
   brokerbotHourData.volumeUSD = brokerbotHourData.volumeUSD.plus(amountUSD)
+
+  tokenDayData.volumeXCHF = tokenDayData.volumeXCHF.plus(amountBase)
+  tokenDayData.volume = tokenDayData.volume.plus(amountToken)
+  tokenDayData.volumeUSD = tokenDayData.volumeUSD.plus(amountUSD)
+
+  baseDayData.volumeXCHF = baseDayData.volumeXCHF.plus(amountBase)
+  baseDayData.volume = baseDayData.volume.plus(amountBase)
+  baseDayData.volumeUSD = baseDayData.volumeUSD.plus(amountUSD)
+
+  tokenHourData.volumeXCHF = tokenHourData.volumeXCHF.plus(amountBase)
+  tokenHourData.volume = tokenHourData.volume.plus(amountToken)
+  tokenHourData.volumeUSD = tokenHourData.volumeUSD.plus(amountUSD)
+
+  baseHourData.volumeXCHF = baseHourData.volumeXCHF.plus(amountBase)
+  baseHourData.volume = baseHourData.volume.plus(amountBase)
+  baseHourData.volumeUSD = baseHourData.volumeUSD.plus(amountUSD)
 
   // save
   aktionariatDayData.save()

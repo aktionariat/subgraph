@@ -34,16 +34,20 @@ type Token @entity {
   totalSupply: BigInt!
   # volume in token units
   tradeVolume: BigDecimal!
+  # volume in derived XCHF
+  tradeVolumeXCHF: BigDecimal!
   # volume in derived USD
   tradeVolumeUSD: BigDecimal!
   # transactions count
   txCount: BigInt!
   # liquidity in token units
   totalValueLocked: BigDecimal!
+  # liquidity in derived XCHF
+  totalValueLockedXCHF: BigDecimal!
   # liquidity in derived USD
   totalValueLockedUSD: BigDecimal!
-  # derived price in ETH
-  derivedETH: BigDecimal!
+  # derived price in XCHF
+  derivedXCHF: BigDecimal!
 }
 
 type Brokerbot @entity {
@@ -136,9 +140,13 @@ type AktionariatDayData @entity {
   # number of daily transactions
   txCount: BigInt!
   # tvl in terms of USD
-  tvlUSD: BigDecimal!
+  totalValueLockedUSD: BigDecimal!
   # tvl in terms of XCHF
-  tvlXCHF: BigDecimal!
+  totalValueLockedXCHF: BigDecimal!
+  # total raised in terms of USD
+  totalRaisedUSD: BigDecimal!
+  # total raised in terms of XCHF
+  totalRaisedXCHF: BigDecimal!
 }
 
 # Data accumulated and condensed into day stats for each brokerbot
@@ -151,16 +159,16 @@ type BrokerbotDayData @entity {
   brokerbot: Brokerbot!
   # in range liquidity at end of period
   liquidity: BigInt!
-  # current price tracker at end of period
-  price: BigInt!
+  # current usd price
+  priceUSD: BigDecimal!
   # price of base
   basePrice: BigDecimal!
   # price of token
   tokenPrice: BigDecimal!
   # tvl derived in USD at end of period
-  tvlUSD: BigDecimal!
+  totalValueLockedUSD: BigDecimal!
   # tvl derived in XCHF at end of period
-  tvlXCHF: BigDecimal!
+  totalValueLockedXCHF: BigDecimal!
   # volume in base
   volumeBase: BigDecimal!
   # volume in token
@@ -189,14 +197,16 @@ type BrokerbotHourData @entity {
   brokerbot: Brokerbot!
   # in range liquidity at end of period
   liquidity: BigInt!
-  # current price tracker at end of period
-  price: BigInt!
+  # current usd price tracker at end of period
+  priceUSD: BigDecimal!
   # price of base
   basePrice: BigDecimal!
   # price of token
   tokenPrice: BigDecimal!
   # tvl derived in USD at end of period
-  tvlUSD: BigDecimal!
+  totalValueLockedUSD: BigDecimal!
+  # tvl derived in XCHF at end of period
+  totalValueLockedXCHF: BigDecimal!
   # volume in base
   volumeBase: BigDecimal!
   # volume in token
@@ -224,7 +234,7 @@ type TokenDayData @entity {
   token: Token!
   # volume in token units
   volume: BigDecimal!
-  # volume
+  # volume USD
   volumeUSD: BigDecimal!
   # volume XCHF
   volumeXCHF: BigDecimal!
@@ -238,13 +248,13 @@ type TokenDayData @entity {
   priceXCHF: BigDecimal!
   # price at end of period in USD
   priceUSD: BigDecimal!
-  # opening price USD
+  # opening price xchf
   open: BigDecimal!
-  # high price USD
+  # high price xchf
   high: BigDecimal!
-  # low price USD
+  # low price xchf
   low: BigDecimal!
-  # close price USD
+  # close price xchf
   close: BigDecimal!
 }
 
@@ -257,10 +267,10 @@ type TokenHourData @entity {
   token: Token!
   # volume in token units
   volume: BigDecimal!
-  # volume in derived USD
+  # volume USD
   volumeUSD: BigDecimal!
-  # volume in USD even on pools with less reliable USD values
-  untrackedVolumeUSD: BigDecimal!
+  # volume XCHF
+  volumeXCHF: BigDecimal!
   # liquidity across all pools in token units
   totalValueLocked: BigDecimal!
   # liquidity across all pools in XCHF
@@ -271,12 +281,12 @@ type TokenHourData @entity {
   priceXCHF: BigDecimal!
   # price at end of period in USD
   priceUSD: BigDecimal!
-  # opening price USD
+  # opening price xchf
   open: BigDecimal!
-  # high price USD
+  # high price xchf
   high: BigDecimal!
-  # low price USD
+  # low price xchf
   low: BigDecimal!
-  # close price USD
+  # close price xchf
   close: BigDecimal!
 }

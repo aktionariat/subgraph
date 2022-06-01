@@ -14,7 +14,7 @@ import {
   convertToUsd,
   getRegistry,
   getEntities,
-} from './helpers'
+} from './utils/helpers'
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
   const REGISTRY_ADDRESS = event.address.toHexString()
