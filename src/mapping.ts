@@ -114,7 +114,9 @@ export function handleTrade(event: Trade): void {
   brokerbot.reserveBase = marketBaseBalance
   brokerbot.reserveToken = marketTokenBalance
   brokerbot.basePrice = convertTokenToDecimal(event.params.newprice, base.decimals)
-  brokerbot.tokenPrice = ONE_BD.div(brokerbot.basePrice)
+  if (brokerbot.basePrice.gt(ZERO_BD)) {
+    brokerbot.tokenPrice = ONE_BD.div(brokerbot.basePrice)
+  }
   brokerbot.totalValueLockedXCHF = marketBaseBalance.plus(marketTokenBalance.times(brokerbot.basePrice))
   brokerbot.totalValueLockedUSD = convertToUsd(base.id, brokerbot.totalValueLockedXCHF)
   if (event.params.amount > ZERO_BI) {
@@ -159,7 +161,9 @@ export function handleTrade(event: Trade): void {
   swap.amountToken = amountToken
   swap.amountUSD = amountUSD
   swap.newPriceBase = convertTokenToDecimal(event.params.newprice, base.decimals)
-  swap.avgPriceBase = convertTokenToDecimal(event.params.totPrice.div(event.params.amount.abs()), base.decimals)
+  if (event.params.amount.abs().gt(ZERO_BI)) {
+    swap.avgPriceBase = convertTokenToDecimal(event.params.totPrice.div(event.params.amount.abs()), base.decimals)
+  }
   swap.newPriceUSD = convertToUsd(base.id, swap.newPriceBase)
   swap.avgPriceUSD = convertToUsd(base.id, swap.avgPriceBase)
   swap.logIndex = event.logIndex
