@@ -8,7 +8,7 @@ dataSources:
     source:
       address: "0xbddE35780e3986a47e54a580017d8213f0D2bB84"
       abi: Brokerbot
-      startBlock: 12544441
+      startBlock: 12544440
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -256,7 +256,7 @@ dataSources:
     source:
       address: "0x1abD8b5194D733691D64c3F898300f88Ba0035d5"
       abi: Brokerbot
-      startBlock: 14412543
+      startBlock: 14412542
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
