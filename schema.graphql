@@ -19,6 +19,10 @@ type Registry @entity {
 
   # current owner of the registry
   owner: ID!
+
+  # block number of the last update
+  lastUpdate: BigInt!
+
 }
 
 type Token @entity {
@@ -109,6 +113,8 @@ type Swap @entity {
   token: Token!
   # sender of the swap
   sender: Bytes!
+  # is a buy
+  isBuy: Boolean!
   # delta of base swapped
   amountBase: BigDecimal!
   # delta of tokenToken swapped

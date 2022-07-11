@@ -133,6 +133,7 @@ export function handleTrade(event: Trade): void {
   registry.totalValueLockedUSD = convertToUsd(base.id, registry.totalValueLockedXCHF)
   registry.totalRaisedXCHF = registry.totalRaisedXCHF.plus(brokerbot.totalRaisedXCHF)
   registry.totalRaisedUSD = registry.totalRaisedUSD.plus(brokerbot.totalRaisedUSD)
+  registry.lastUpdate = event.block.number
 
   // save entities
   registry.save()
@@ -157,6 +158,7 @@ export function handleTrade(event: Trade): void {
   swap.timestamp = transaction.timestamp
   swap.transaction = transaction.id
   swap.sender = event.params.who
+  swap.isBuy = event.params.amount > ZERO_BI
   swap.amountBase = amountBase
   swap.amountToken = amountToken
   swap.amountUSD = amountUSD
