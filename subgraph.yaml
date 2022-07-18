@@ -19,6 +19,10 @@ dataSources:
       abis:
         - name: Brokerbot
           file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC20SymbolBytes
@@ -50,6 +54,10 @@ dataSources:
       abis:
         - name: Brokerbot
           file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC20SymbolBytes
@@ -81,6 +89,10 @@ dataSources:
       abis:
         - name: Brokerbot
           file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC20SymbolBytes
@@ -112,6 +124,10 @@ dataSources:
       abis:
         - name: Brokerbot
           file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC20SymbolBytes
@@ -143,6 +159,10 @@ dataSources:
       abis:
         - name: Brokerbot
           file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC20SymbolBytes
@@ -174,6 +194,10 @@ dataSources:
       abis:
         - name: Brokerbot
           file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC20SymbolBytes
@@ -205,6 +229,10 @@ dataSources:
       abis:
         - name: Brokerbot
           file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC20SymbolBytes
@@ -236,6 +264,10 @@ dataSources:
       abis:
         - name: Brokerbot
           file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC20SymbolBytes
@@ -267,6 +299,10 @@ dataSources:
       abis:
         - name: Brokerbot
           file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC20SymbolBytes
@@ -299,6 +335,10 @@ dataSources:
       abis:
         - name: BrokerbotRegistry
           file: ./abis/BrokerbotRegistry.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
         - name: ERC20
           file: ./abis/ERC20.json
         - name: ERC20SymbolBytes

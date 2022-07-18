@@ -1,298 +1,302 @@
 type Registry @entity {
-  # registry address
+  " registry address"
   id: ID!
-  # amount of pools created
+  " amount of pools created"
   marketCount: BigInt!
-  # amoutn of transactions all time
+  " amoutn of transactions all time"
   txCount: BigInt!
-  # total volume all time in USD
+  " total volume all time in USD"
   totalVolumeUSD: BigDecimal!
-  # total volume all time in XCHF
+  " total volume all time in XCHF"
   totalVolumeXCHF: BigDecimal!
-  # TVL in USD
+  " TVL in USD"
   totalValueLockedUSD: BigDecimal!
-  # TVL in XCHF
+  " TVL in XCHF"
   totalValueLockedXCHF: BigDecimal!
-  # raised
+  " raised"
   totalRaisedXCHF: BigDecimal!
   totalRaisedUSD: BigDecimal!
 
-  # current owner of the registry
+  " current owner of the registry"
   owner: ID!
 
-  # block number of the last update
+  " block number of the last update"
   lastUpdate: BigInt!
 
 }
 
 type Token @entity {
-  # token address
+  " token address"
   id: ID!
-  # token symbol
+  " token symbol"
   symbol: String!
-  # token name
+  " token name"
   name: String!
-  # token decimals
+  " token decimals"
   decimals: BigInt!
-  # token total supply
+  " token total supply"
   totalSupply: BigInt!
-  # volume in token units
+  " total shares "
+  totalShares: BigInt
+  " volume in token units"
   tradeVolume: BigDecimal!
-  # volume in derived XCHF
+  " volume in derived XCHF"
   tradeVolumeXCHF: BigDecimal!
-  # volume in derived USD
+  " volume in derived USD"
   tradeVolumeUSD: BigDecimal!
-  # transactions count
+  " transactions count"
   txCount: BigInt!
-  # liquidity in token units
+  " liquidity in token units"
   totalValueLocked: BigDecimal!
-  # liquidity in derived XCHF
+  " liquidity in derived XCHF"
   totalValueLockedXCHF: BigDecimal!
-  # liquidity in derived USD
+  " liquidity in derived USD"
   totalValueLockedUSD: BigDecimal!
-  # derived price in XCHF
+  " derived price in XCHF"
   derivedXCHF: BigDecimal!
+  " market cap in XCHF "
+  marketCap: BigDecimal
 }
 
 type Brokerbot @entity {
-  # brokerbot address
+  " brokerbot address"
   id: ID!
 
-  # mirrored from the smart contract
+  " mirrored from the smart contract"
   base: Token!
   token: Token!
   reserveBase: BigDecimal!
   reserveToken: BigDecimal!
   totalSupply: BigDecimal!
   
-  # calculated liquidity
+  " calculated liquidity"
   totalValueLockedXCHF: BigDecimal!
   totalValueLockedUSD: BigDecimal!
 
-  # Price in terms of the asset market
+  " Price in terms of the asset market"
   basePrice: BigDecimal!
   tokenPrice: BigDecimal!
 
-  # lifetime volume stats
+  " lifetime volume stats"
   volumeBase: BigDecimal!
   volumeToken: BigDecimal!
   volumeUSD: BigDecimal!
   txCount: BigInt!
 
-  # raised
+  " raised"
   totalRaisedXCHF: BigDecimal!
   totalRaisedUSD: BigDecimal!
 }
 
 type Transaction @entity {
-  # txn hash
+  " txn hash"
   id: ID!
-  # block txn was included in
+  " block txn was included in"
   blockNumber: BigInt!
-  # timestamp txn was confirmed
+  " timestamp txn was confirmed"
   timestamp: BigInt!
-  # gas used during txn execution
+  " gas used during txn execution"
   gasUsed: BigInt!
   gasPrice: BigInt!
-  # derived values
+  " derived values"
   swap: Swap!
 }
 
 type Swap @entity {
-  # transaction hash + "#" + index in swaps Transaction array
+  " transaction hash + ''''''' + index in swaps Transaction array"
   id: ID!
-  # pointer to transaction
+  " pointer to transaction"
   transaction: Transaction!
-  # timestamp of transaction
+  " timestamp of transaction"
   timestamp: BigInt!
-  # pool swap occured within
+  " pool swap occured within"
   brokerbot: Brokerbot!
-  # allow indexing by tokens
+  " allow indexing by tokens"
   base: Token!
-  # allow indexing by tokens
+  " allow indexing by tokens"
   token: Token!
-  # sender of the swap
+  " sender of the swap"
   sender: Bytes!
-  # is a buy
+  " is a buy"
   isBuy: Boolean!
-  # delta of base swapped
+  " delta of base swapped"
   amountBase: BigDecimal!
-  # delta of tokenToken swapped
+  " delta of tokenToken swapped"
   amountToken: BigDecimal!
-  # derived info
+  " derived info"
   amountUSD: BigDecimal!
-  # The price of the market after the swap
+  " The price of the market after the swap"
   newPriceBase: BigDecimal!
-  # The average paid price
+  " The average paid price"
   avgPriceBase: BigDecimal!
-  # The price of the market after the swap in USD
+  " The price of the market after the swap in USD"
   newPriceUSD: BigDecimal!
-  # The average paid price in USD
+  " The average paid price in USD"
   avgPriceUSD: BigDecimal!
-  # index within the txn
+  " index within the txn"
   logIndex: BigInt
 }
 
-# Data accumulated and condensed into day stats for all of Uniswap
+" Data accumulated and condensed into day stats for all of Uniswap"
 type AktionariatDayData @entity {
-  # timestamp rounded to current day by dividing by 86400
+  " timestamp rounded to current day by dividing by 86400"
   id: ID!
-  # timestamp rounded to current day by dividing by 86400
+  " timestamp rounded to current day by dividing by 86400"
   date: Int!
-  # total daily volume in Uniswap derived in terms of XCHF
+  " total daily volume in Uniswap derived in terms of XCHF"
   volumeXCHF: BigDecimal!
-  # total daily volume in Uniswap derived in terms of USD
+  " total daily volume in Uniswap derived in terms of USD"
   volumeUSD: BigDecimal!
-  # number of daily transactions
+  " number of daily transactions"
   txCount: BigInt!
-  # tvl in terms of USD
+  " tvl in terms of USD"
   totalValueLockedUSD: BigDecimal!
-  # tvl in terms of XCHF
+  " tvl in terms of XCHF"
   totalValueLockedXCHF: BigDecimal!
-  # total raised in terms of USD
+  " total raised in terms of USD"
   totalRaisedUSD: BigDecimal!
-  # total raised in terms of XCHF
+  " total raised in terms of XCHF"
   totalRaisedXCHF: BigDecimal!
 }
 
-# Data accumulated and condensed into day stats for each brokerbot
+" Data accumulated and condensed into day stats for each brokerbot"
 type BrokerbotDayData @entity {
-  # timestamp rounded to current day by dividing by 86400
+  " timestamp rounded to current day by dividing by 86400"
   id: ID!
-  # timestamp rounded to current day by dividing by 86400
+  " timestamp rounded to current day by dividing by 86400"
   date: Int!
-  # pointer to brokerbot
+  " pointer to brokerbot"
   brokerbot: Brokerbot!
-  # in range liquidity at end of period
+  " in range liquidity at end of period"
   liquidity: BigInt!
-  # current usd price
+  " current usd price"
   priceUSD: BigDecimal!
-  # price of base
+  " price of base"
   basePrice: BigDecimal!
-  # price of token
+  " price of token"
   tokenPrice: BigDecimal!
-  # tvl derived in USD at end of period
+  " tvl derived in USD at end of period"
   totalValueLockedUSD: BigDecimal!
-  # tvl derived in XCHF at end of period
+  " tvl derived in XCHF at end of period "
   totalValueLockedXCHF: BigDecimal!
-  # volume in base
+  " volume in base "
   volumeBase: BigDecimal!
-  # volume in token
+  " volume in token "
   volumeToken: BigDecimal!
-  # volume in USD
+  " volume in USD "
   volumeUSD: BigDecimal!
-  # number of transactions during period
+  " number of transactions during period "
   txCount: BigInt!
-  # opening price of token
+  " opening price of token "
   open: BigDecimal!
-  # high price of token
+  " high price of token "
   high: BigDecimal!
-  # low price of token
+  " low price of token "
   low: BigDecimal!
-  # close price of token
+  " close price of token "
   close: BigDecimal!
 }
 
-# hourly stats tracker for pool
+" hourly stats tracker for pool "
 type BrokerbotHourData @entity {
-  # format: <brokerbot address>-<timestamp>
+  " format: <brokerbot address>-<timestamp> "
   id: ID!
-  # unix timestamp for start of hour
+  " unix timestamp for start of hour "
   periodStartUnix: Int!
-  # pointer to brokerbot
+  " pointer to brokerbot "
   brokerbot: Brokerbot!
-  # in range liquidity at end of period
+  " in range liquidity at end of period "
   liquidity: BigInt!
-  # current usd price tracker at end of period
+  " current usd price tracker at end of period "
   priceUSD: BigDecimal!
-  # price of base
+  " price of base "
   basePrice: BigDecimal!
-  # price of token
+  " price of token "
   tokenPrice: BigDecimal!
-  # tvl derived in USD at end of period
+  " tvl derived in USD at end of period "
   totalValueLockedUSD: BigDecimal!
-  # tvl derived in XCHF at end of period
+  " tvl derived in XCHF at end of period "
   totalValueLockedXCHF: BigDecimal!
-  # volume in base
+  " volume in base "
   volumeBase: BigDecimal!
-  # volume in token
+  " volume in token "
   volumeToken: BigDecimal!
-  # volume in USD
+  " volume in USD "
   volumeUSD: BigDecimal!
-  # number of transactions during period
+  " number of transactions during period "
   txCount: BigInt!
-  # opening price of token
+  " opening price of token "
   open: BigDecimal!
-  # high price of token
+  " high price of token "
   high: BigDecimal!
-  # low price of token
+  " low price of token "
   low: BigDecimal!
-  # close price of token
+  " close price of token "
   close: BigDecimal!
 }
 
 type TokenDayData @entity {
-  # token address concatendated with date
+  " token address concatendated with date "
   id: ID!
-  # timestamp rounded to current day by dividing by 86400
+  " timestamp rounded to current day by dividing by 86400 "
   date: Int!
-  # pointer to token
+  " pointer to token "
   token: Token!
-  # volume in token units
+  " volume in token units "
   volume: BigDecimal!
-  # volume USD
+  " volume USD "
   volumeUSD: BigDecimal!
-  # volume XCHF
+  " volume XCHF "
   volumeXCHF: BigDecimal!
-  # liquidity across all brokerbots in token units
+  " liquidity across all brokerbots in token units "
   totalValueLocked: BigDecimal!
-  # liquidity across all brokerbots in XCHF
+  " liquidity across all brokerbots in XCHF "
   totalValueLockedXCHF: BigDecimal!
-  # liquidity across all brokerbots in USD
+  " liquidity across all brokerbots in USD "
   totalValueLockedUSD: BigDecimal!
-  # price at end of period in XCHF
+  " price at end of period in XCHF "
   priceXCHF: BigDecimal!
-  # price at end of period in USD
+  " price at end of period in USD "
   priceUSD: BigDecimal!
-  # opening price xchf
+  " opening price xchf "
   open: BigDecimal!
-  # high price xchf
+  " high price xchf "
   high: BigDecimal!
-  # low price xchf
+  " low price xchf "
   low: BigDecimal!
-  # close price xchf
+  " close price xchf "
   close: BigDecimal!
 }
 
 type TokenHourData @entity {
-  # token address concatendated with date
+  " token address concatendated with date "
   id: ID!
-  # unix timestamp for start of hour
+  " unix timestamp for start of hour "
   periodStartUnix: Int!
-  # pointer to token
+  " pointer to token "
   token: Token!
-  # volume in token units
+  " volume in token units "
   volume: BigDecimal!
-  # volume USD
+  " volume USD "
   volumeUSD: BigDecimal!
-  # volume XCHF
+  " volume XCHF "
   volumeXCHF: BigDecimal!
-  # liquidity across all pools in token units
+  " liquidity across all pools in token units "
   totalValueLocked: BigDecimal!
-  # liquidity across all pools in XCHF
+  " liquidity across all pools in XCHF "
   totalValueLockedXCHF: BigDecimal!
-  # liquidity across all pools in  USD
+  " liquidity across all pools in  USD "
   totalValueLockedUSD: BigDecimal!
-  # price at end of period in XCHF
+  " price at end of period in XCHF "
   priceXCHF: BigDecimal!
-  # price at end of period in USD
+  " price at end of period in USD "
   priceUSD: BigDecimal!
-  # opening price xchf
+  " opening price xchf "
   open: BigDecimal!
-  # high price xchf
+  " high price xchf "
   high: BigDecimal!
-  # low price xchf
+  " low price xchf "
   low: BigDecimal!
-  # close price xchf
+  " close price xchf "
   close: BigDecimal!
 }
