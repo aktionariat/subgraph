@@ -20,7 +20,8 @@ import {
   convertToUsd,
   REGISTRY_ADDRESS,
   ONE_BD,
-  getRegistry
+  getRegistry,
+  fetchTokenTotalShares
 } from './utils/helpers'
 import { updateAktionariatDayData, updateBrokerbotDayData, updateBrokerbotHourData, updateTokenDayData, updateTokenHourData } from "./utils/intervalUpdates"
 
@@ -64,6 +65,7 @@ export function handleTrade(event: Trade): void {
     token.name = fetchTokenName(event.params.token)
     token.totalSupply = fetchTokenTotalSupply(event.params.token)
     token.decimals = fetchTokenDecimals(event.params.token)
+    token.totalShares = fetchTokenTotalShares(event.params.token)
 
     token.derivedXCHF = ZERO_BD
     token.tradeVolume = ZERO_BD
@@ -89,17 +91,27 @@ export function handleTrade(event: Trade): void {
 
   // update base global volume and token liquidity stats
   base.tradeVolume = base.tradeVolume.plus(amountBase)
+  base.tradeVolumeXCHF = base.tradeVolumeXCHF.plus(amountBase)
   base.tradeVolumeUSD = base.tradeVolumeUSD.plus(amountUSD)
   base.totalValueLocked = base.totalValueLocked.plus(marketBaseBalance)
   base.totalValueLockedXCHF = base.totalValueLocked
   base.totalValueLockedUSD = convertToUsd(base.id, base.totalValueLocked)
+  base.totalSupply = fetchTokenTotalSupply(event.params.base)
 
   // update token global volume and token liquidity stats
   token.tradeVolume = token.tradeVolume.plus(amountToken)
+  token.tradeVolumeXCHF = token.tradeVolume.plus(amountBase)
   token.tradeVolumeUSD = base.tradeVolumeUSD.plus(amountUSD)
   token.totalValueLocked = token.totalValueLocked.plus(marketTokenBalance)
   token.totalValueLockedXCHF = token.totalValueLocked.times(brokerbot.basePrice)
   token.totalValueLockedUSD = convertToUsd(base.id, token.totalValueLocked.times(brokerbot.basePrice))
+
+  token.totalSupply = fetchTokenTotalSupply(event.params.token)
+  token.derivedXCHF = brokerbot.basePrice
+  token.totalShares = fetchTokenTotalShares(event.params.token)
+  if(token.totalShares !== null) {
+    token.marketCap = token.derivedXCHF.times(token.totalShares!.toBigDecimal())
+  }
 
   // update txn counts
   base.txCount = base.txCount.plus(ONE_BI)
@@ -123,7 +135,6 @@ export function handleTrade(event: Trade): void {
     brokerbot.totalRaisedXCHF = brokerbot.totalRaisedXCHF.plus(amountBase)
     brokerbot.totalRaisedUSD = brokerbot.totalRaisedUSD.plus(convertToUsd(base.id, amountBase))
   }
-  token.derivedXCHF = brokerbot.basePrice
   
   // update data of registry
   registry.txCount = registry.txCount.plus(ONE_BI)

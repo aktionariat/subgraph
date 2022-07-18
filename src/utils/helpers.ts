@@ -4,6 +4,8 @@ import { ERC20 } from '../../generated/Brokerbot/ERC20'
 import { ERC20SymbolBytes } from '../../generated/Brokerbot/ERC20SymbolBytes'
 import { ERC20NameBytes } from '../../generated/Brokerbot/ERC20NameBytes'
 import { AggregatorV3Interface } from '../../generated/Brokerbot/AggregatorV3Interface'
+import { Shares } from '../../generated/Brokerbot/Shares'
+import { ERC20Draggable } from '../../generated/Brokerbot/ERC20Draggable'
 import { StaticTokenDefinition } from '../staticTokenDefinition'
 import {   
   Brokerbot,
@@ -169,9 +171,26 @@ export function fetchTokenDecimals(tokenAddress: Address): BigInt {
       return staticTokenDefinition.decimals
     }
   }
-
   return BigInt.fromI32(decimalValue as i32)
 }
+
+export function fetchTokenTotalShares(tokenAddress: Address): BigInt {
+  let shares = Shares.bind(tokenAddress)
+  let totalSharesValue = BigInt.fromI32(0)
+  let totalSharesResult = shares.try_totalShares()
+  if (!totalSharesResult.reverted) {
+    totalSharesValue = totalSharesResult.value
+  } else {
+    let draggable = ERC20Draggable.bind(tokenAddress)
+    totalSharesResult = draggable.try_totalVotingTokens()
+    if (!totalSharesResult.reverted) {
+      totalSharesValue = totalSharesResult.value
+      log.error("total shares: %s", [totalSharesValue.toString()])
+    }
+  }
+  return totalSharesValue
+}
+
 
 export function convertToUsd(tokenAddress: string, value: BigDecimal): BigDecimal {
   let network = dataSource.network();
