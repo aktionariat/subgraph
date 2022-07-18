@@ -14,6 +14,9 @@ import {
   convertToUsd,
   getRegistry,
   getEntities,
+  fetchBrokerbotBasePrice,
+  ZERO_BD,
+  ONE_BD,
 } from './utils/helpers'
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
@@ -60,6 +63,10 @@ export function handleSyncBrokerbot(event: SyncBrokerbot): void {
 
       brokerbot.reserveBase = marketBaseBalance
       brokerbot.reserveToken = marketTokenBalance
+      brokerbot.basePrice = convertTokenToDecimal(fetchBrokerbotBasePrice(Address.fromString(brokerbot.id)), base.decimals)
+      if (brokerbot.basePrice.gt(ZERO_BD)) {
+        brokerbot.tokenPrice = ONE_BD.div(brokerbot.basePrice)
+      }
       brokerbot.totalValueLockedXCHF = marketBaseBalance.plus(marketTokenBalance.times(brokerbot.basePrice))
       brokerbot.totalValueLockedUSD = convertToUsd(base.id, brokerbot.totalValueLockedXCHF)
 

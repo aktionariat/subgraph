@@ -332,7 +332,9 @@ dataSources:
         - OwnershipTransferred
         - RegisterBrokerbot
         - SyncBrokerbot
-      abis:
+      abis:        
+        - name: Brokerbot
+          file: ./abis/Brokerbot.json
         - name: BrokerbotRegistry
           file: ./abis/BrokerbotRegistry.json
         - name: Shares
