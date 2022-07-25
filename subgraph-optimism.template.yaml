@@ -11,7 +11,7 @@ dataSources:
       startBlock: {{startBlock1}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Market
@@ -49,7 +49,7 @@ dataSources:
       startBlock: {{startBlock2}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Market
@@ -78,7 +78,7 @@ dataSources:
         - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
           handler: handleTrade
       file: ./src/mapping.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: BrokerbotRegistry
     network: optimism
     source: 
@@ -87,13 +87,15 @@ dataSources:
       startBlock: 8413163
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - OwnershipTransferred
-        - RegisterBrokerbot
-        - SyncBrokerbot
+        - Registry
+        - Brokerbot
+        - Token
       abis:
+        - name: Brokerbot
+          file: ./abis/Brokerbot.json
         - name: BrokerbotRegistry
           file: ./abis/BrokerbotRegistry.json
         - name: Shares
@@ -122,24 +124,42 @@ dataSources:
           handler: handleSyncBrokerbot
       file: ./src/registry.ts
 templates:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: Brokerbot
     network: optimism
     source:
       abi: Brokerbot
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/mapping.ts
       entities:
-        - Market
+        - Brokerbot
         - Token
+        - Registry
+        - Transaction
+        - Swap
+        - AktionariatDayData
+        - BrokerbotDayData
+        - BrokerbotHourData
+        - TokenDayData
+        - TokenHourData
       abis:
         - name: Brokerbot
           file: ./abis/Brokerbot.json
         - name: BrokerbotRegistry
           file: ./abis/BrokerbotRegistry.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
         # Uniswap Contracts
         - name: UniswapFactory
           file: ./abis/Prices/Uniswap/Factory.json

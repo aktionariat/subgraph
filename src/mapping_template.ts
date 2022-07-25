@@ -26,6 +26,7 @@ import {
 import { updateAktionariatDayData, updateBrokerbotDayData, updateBrokerbotHourData, updateTokenDayData, updateTokenHourData } from "./utils/intervalUpdates"
 
 export function handleTrade(event: Trade): void {
+  log.warning("trade event", []);
   // load registry
   let registry = getRegistry(REGISTRY_ADDRESS.toHexString())
 

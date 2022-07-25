@@ -329,9 +329,9 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - OwnershipTransferred
-        - RegisterBrokerbot
-        - SyncBrokerbot
+        - Registry
+        - Brokerbot
+        - Token
       abis:        
         - name: Brokerbot
           file: ./abis/Brokerbot.json
@@ -378,13 +378,31 @@ templates:
       language: wasm/assemblyscript
       file: ./src/mapping.ts
       entities:
-        - Market
+        - Brokerbot
         - Token
+        - Registry
+        - Transaction
+        - Swap
+        - AktionariatDayData
+        - BrokerbotDayData
+        - BrokerbotHourData
+        - TokenDayData
+        - TokenHourData
       abis:
         - name: Brokerbot
           file: ./abis/Brokerbot.json
         - name: BrokerbotRegistry
           file: ./abis/BrokerbotRegistry.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
         # Uniswap Contracts
         - name: UniswapFactory
           file: ./abis/Prices/Uniswap/Factory.json

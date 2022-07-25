@@ -2,7 +2,7 @@ import * as MAINNET from "../config/mainnet";
 import * as OPTIMISM from "../config/optimism"
 
 import { Address, BigDecimal, BigInt, TypedMap } from "@graphprotocol/graph-ts";
-import { UniswapPair__getReservesResult } from "../../../generated/Brokerbot/UniswapPair";
+import { UniswapPair__getReservesResult } from "../../../generated/templates/Brokerbot/UniswapPair";
 
 ///////////////////////////////////////////////////////////////////////////
 /////////////////////////////////// COMMON ////////////////////////////////

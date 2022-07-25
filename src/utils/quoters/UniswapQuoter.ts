@@ -2,7 +2,7 @@ import * as constants from "../common/constants";
 import { CustomPriceType } from "../common/types";
 
 import { Address, BigInt, Bytes, ethereum,log } from "@graphprotocol/graph-ts";
-import { UniswapQuoter as UniswapQuoterContract } from "../../../generated/Brokerbot/UniswapQuoter";
+import { UniswapQuoter as UniswapQuoterContract } from "../../../generated/templates/Brokerbot/UniswapQuoter";
 import {
   fetchTokenDecimals
 } from '../helpers'

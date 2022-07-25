@@ -1,18 +1,19 @@
 /* eslint-disable prefer-const */
 import { log, BigInt, BigDecimal, Address, dataSource } from '@graphprotocol/graph-ts'
-import { ERC20 } from '../../generated/Brokerbot/ERC20'
-import { ERC20SymbolBytes } from '../../generated/Brokerbot/ERC20SymbolBytes'
-import { ERC20NameBytes } from '../../generated/Brokerbot/ERC20NameBytes'
-import { AggregatorV3Interface } from '../../generated/Brokerbot/AggregatorV3Interface'
-import { Shares } from '../../generated/Brokerbot/Shares'
-import { ERC20Draggable } from '../../generated/Brokerbot/ERC20Draggable'
-import { Brokerbot as BrokerbotContract } from '../../generated/Brokerbot/Brokerbot'
+import { ERC20 } from '../../generated/BrokerbotRegistry/ERC20'
+import { ERC20SymbolBytes } from '../../generated/BrokerbotRegistry/ERC20SymbolBytes'
+import { ERC20NameBytes } from '../../generated/BrokerbotRegistry/ERC20NameBytes'
+import { AggregatorV3Interface } from '../../generated/BrokerbotRegistry/AggregatorV3Interface'
+import { Shares } from '../../generated/BrokerbotRegistry/Shares'
+import { ERC20Draggable } from '../../generated/BrokerbotRegistry/ERC20Draggable'
+import { Brokerbot as BrokerbotContract } from '../../generated/BrokerbotRegistry/Brokerbot'
 import { StaticTokenDefinition } from '../staticTokenDefinition'
 import {   
   Brokerbot,
   Registry,
   Token
 } from "../../generated/schema"
+import { Brokerbot as BrokerbotTemplate } from "../../generated/templates"
 import * as constants from "./common/constants";
 import { CustomPriceType } from "./common/types";
 import { getPriceDai as getPriceDaiUniswap } from "./quoters/UniswapQuoter";
@@ -204,6 +205,7 @@ export function fetchBrokerbotBasePrice(brokerbotAddress: Address): BigInt {
 
 export function convertToUsd(tokenAddress: string, value: BigDecimal): BigDecimal {
   let network = dataSource.network();
+  // mainnet gets price thru chainlink feed
   if (network == 'mainnet') {
     let priceFeedRegitryContract = AggregatorV3Interface.bind(CHAINLINK_FEED_REGISTRY_ADDRESS)
     if (tokenAddress == XCHF_ADDRESS.toHexString()) {
@@ -218,9 +220,10 @@ export function convertToUsd(tokenAddress: string, value: BigDecimal): BigDecima
     log.warning('got reverted {} address: {}', [result.reverted.toString(), tokenAddress])
     return value    
   } else {
+    // other networks (optimism) gets price over uniswap
     let price = getUsdPricePerToken(Address.fromString(tokenAddress))
     let decimalPrice = price.usdPrice.div(price.decimalsBaseTen)
-    log.warning("usd price : {}", [decimalPrice.toString()])
+    //log.warning("usd price : {}", [decimalPrice.toString()])
     return value.times(decimalPrice)
   }
 }
@@ -253,6 +256,7 @@ export function getEntities(
   // load market
   let brokerbot = Brokerbot.load(marketAddress.toHexString())
   if (brokerbot === null) {
+    BrokerbotTemplate.create(marketAddress)
     brokerbot = new Brokerbot(marketAddress.toHexString())
     brokerbot.base = baseAddress.toHexString()
     brokerbot.token = tokenAddress.toHexString()
@@ -308,10 +312,10 @@ export function getUsdPricePerToken(tokenAddr: Address): CustomPriceType {
   // Uniswap Quoter
   let uniswapPrice = getPriceDaiUniswap(tokenAddr, network);
   if (!uniswapPrice.reverted) {
-    log.warning("[UniswapQuoter] tokenAddress: {}, Price: {}", [
-      tokenAddr.toHexString(),
-      uniswapPrice.usdPrice.div(uniswapPrice.decimalsBaseTen).toString(),
-    ]);
+    //log.warning("[UniswapQuoter] tokenAddress: {}, Price: {}", [
+    //  tokenAddr.toHexString(),
+    //  uniswapPrice.usdPrice.div(uniswapPrice.decimalsBaseTen).toString(),
+    //]);
     return uniswapPrice;
   }
 
