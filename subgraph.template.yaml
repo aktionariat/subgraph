@@ -403,6 +403,8 @@ templates:
           file: ./abis/ERC20SymbolBytes.json
         - name: ERC20NameBytes
           file: ./abis/ERC20NameBytes.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
         # Uniswap Contracts
         - name: UniswapFactory
           file: ./abis/Prices/Uniswap/Factory.json
