@@ -56,6 +56,7 @@ export function updateBrokerbotDayData(event: ethereum.Event): BrokerbotDayData 
       brokerbotDayData.volumeBase = constants.BIGDECIMAL_ZERO
       brokerbotDayData.volumeToken = constants.BIGDECIMAL_ZERO
       brokerbotDayData.volumeUSD = constants.BIGDECIMAL_ZERO
+      brokerbotDayData.volumeXCHF = constants.BIGDECIMAL_ZERO
       brokerbotDayData.txCount = constants.BIGINT_ZERO
       brokerbotDayData.open = brokerbot.tokenPrice
       brokerbotDayData.high = brokerbot.tokenPrice
@@ -103,6 +104,7 @@ export function updateBrokerbotHourData(event: ethereum.Event): BrokerbotHourDat
       brokerbotHourData.volumeBase = constants.BIGDECIMAL_ZERO
       brokerbotHourData.volumeToken = constants.BIGDECIMAL_ZERO
       brokerbotHourData.volumeUSD = constants.BIGDECIMAL_ZERO
+      brokerbotHourData.volumeXCHF = constants.BIGDECIMAL_ZERO
       brokerbotHourData.txCount = constants.BIGINT_ZERO
       brokerbotHourData.open = brokerbot.basePrice
       brokerbotHourData.high = brokerbot.basePrice
@@ -146,6 +148,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event): TokenDa
     tokenDayData.token = token.id
     tokenDayData.volume = constants.BIGDECIMAL_ZERO
     tokenDayData.volumeUSD = constants.BIGDECIMAL_ZERO
+    tokenDayData.volumeXCHF = constants.BIGDECIMAL_ZERO
     tokenDayData.open = tokenPrice
     tokenDayData.high = tokenPrice
     tokenDayData.low = tokenPrice
@@ -189,6 +192,7 @@ export function updateTokenHourData(token: Token, event: ethereum.Event): TokenH
     tokenHourData.token = token.id
     tokenHourData.volume = constants.BIGDECIMAL_ZERO
     tokenHourData.volumeUSD = constants.BIGDECIMAL_ZERO
+    tokenHourData.volumeXCHF = constants.BIGDECIMAL_ZERO
     tokenHourData.open = tokenPrice
     tokenHourData.high = tokenPrice
     tokenHourData.low = tokenPrice

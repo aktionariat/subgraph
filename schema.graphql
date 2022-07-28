@@ -81,6 +81,7 @@ type Brokerbot @entity {
   volumeBase: BigDecimal!
   volumeToken: BigDecimal!
   volumeUSD: BigDecimal!
+  volumeXCHF: BigDecimal!
   txCount: BigInt!
 
   " raised"
@@ -125,6 +126,8 @@ type Swap @entity {
   amountToken: BigDecimal!
   " derived info"
   amountUSD: BigDecimal!
+  " derived info"
+  amountXCHF: BigDecimal!
   " The price of the market after the swap"
   newPriceBase: BigDecimal!
   " The average paid price"
@@ -171,6 +174,8 @@ type BrokerbotDayData @entity {
   liquidity: BigInt!
   " current usd price"
   priceUSD: BigDecimal!
+  " current xchf price"
+  priceXCHF: BigDecimal!
   " price of base"
   basePrice: BigDecimal!
   " price of token"
@@ -185,6 +190,8 @@ type BrokerbotDayData @entity {
   volumeToken: BigDecimal!
   " volume in USD "
   volumeUSD: BigDecimal!
+    " volume XCHF "
+  volumeXCHF: BigDecimal!
   " number of transactions during period "
   txCount: BigInt!
   " opening price of token "
@@ -209,6 +216,8 @@ type BrokerbotHourData @entity {
   liquidity: BigInt!
   " current usd price tracker at end of period "
   priceUSD: BigDecimal!
+  " current xchf price tracker at end of period "
+  priceXCHF: BigDecimal!
   " price of base "
   basePrice: BigDecimal!
   " price of token "
@@ -223,6 +232,8 @@ type BrokerbotHourData @entity {
   volumeToken: BigDecimal!
   " volume in USD "
   volumeUSD: BigDecimal!
+    " volume XCHF "
+  volumeXCHF: BigDecimal!
   " number of transactions during period "
   txCount: BigInt!
   " opening price of token "

@@ -228,6 +228,15 @@ export function convertToUsd(tokenAddress: string, value: BigDecimal): BigDecima
   }
 }
 
+export function convertToChf(tokenAddress: Address, value: BigDecimal): BigDecimal {
+  let network = dataSource.network();
+  if (tokenAddress == constants.WHITELIST_TOKENS_MAP.get(network)!.get("XCHF")!) {
+    return value
+  } 
+  // TODO: convert from other tokens
+  return value
+}
+
 export function getRegistry(registryAddress: string): Registry {
   let registry = Registry.load(registryAddress)
   if (registry === null) {
