@@ -128,7 +128,7 @@ export function handleTrade(event: Trade): void {
   // update token global volume and token liquidity stats
   token.tradeVolume = token.tradeVolume.plus(amountToken)
   token.tradeVolumeXCHF = token.tradeVolumeXCHF.plus(amountXCHF)
-  token.tradeVolumeUSD = base.tradeVolumeUSD.plus(amountUSD)
+  token.tradeVolumeUSD = token.tradeVolumeUSD.plus(amountUSD)
   token.totalValueLocked = token.totalValueLocked.plus(marketTokenBalance)
   token.totalValueLockedXCHF = convertToChf(Address.fromString(base.id), token.totalValueLocked.times(brokerbot.basePrice))
   token.totalValueLockedUSD = convertToUsd(base.id, token.totalValueLocked.times(brokerbot.basePrice))
