@@ -246,7 +246,6 @@ export function handleTrade(event: Trade): void {
 
 // update brokerbot and token price if the price is manually changed in the brokerbot
 export function handlePriceSet(event: PriceSet): void {
-  log.warning("set price: {} , {}", [event.address.toHexString(), event.params.price.toString()])
   const MARKET_ADDRESS = event.address.toHexString()
   let brokerbot = Brokerbot.load(MARKET_ADDRESS)
   if (brokerbot != null) {
@@ -255,7 +254,6 @@ export function handlePriceSet(event: PriceSet): void {
 
     if (base !== null && token !== null) {      
       brokerbot.basePrice = convertTokenToDecimal(event.params.price, base.decimals)
-      log.warning("brokerbot price {}", [brokerbot.basePrice.toString()])
       if (brokerbot.basePrice.gt(ZERO_BD)) {
         brokerbot.tokenPrice = ONE_BD.div(brokerbot.basePrice)
       }
