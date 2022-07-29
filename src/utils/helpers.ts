@@ -215,7 +215,7 @@ export function convertToUsd(tokenAddress: string, value: BigDecimal): BigDecima
     let result = priceFeedRegitryContract.try_latestRoundData()
     if (!result.reverted) {
       let resultInDecimals = new BigDecimal(result.value.value1).div(BigDecimal.fromString("100000000"))
-      return value.div(resultInDecimals)
+      return value.times(resultInDecimals)
     }
     log.warning('got reverted {} address: {}', [result.reverted.toString(), tokenAddress])
     return value    

@@ -54,6 +54,8 @@ type Token @entity {
   totalValueLockedUSD: BigDecimal!
   " derived price in XCHF"
   derivedXCHF: BigDecimal!
+  " derived price in usd "
+  derivedUSD: BigDecimal!
   " market cap in XCHF "
   marketCap: BigDecimal
 }
@@ -76,6 +78,11 @@ type Brokerbot @entity {
   " Price in terms of the asset market"
   basePrice: BigDecimal!
   tokenPrice: BigDecimal!
+
+  " USD price of token "
+  priceUSD: BigDecimal!
+  " XCHF price of token "
+  priceXCHF: BigDecimal!
 
   " lifetime volume stats"
   volumeBase: BigDecimal!

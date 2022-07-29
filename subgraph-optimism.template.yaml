@@ -170,3 +170,5 @@ templates:
       eventHandlers:
         - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
           handler: handleTrade
+        - event: PriceSet(uint256,uint256)
+          handler: handlePriceSet
