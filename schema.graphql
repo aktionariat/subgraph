@@ -58,6 +58,8 @@ type Token @entity {
   derivedUSD: BigDecimal!
   " market cap in XCHF "
   marketCap: BigDecimal
+  " first trade price in XCHF "
+  firstTradePriceXCHF: BigDecimal!
 }
 
 type Brokerbot @entity {
@@ -143,6 +145,10 @@ type Swap @entity {
   newPriceUSD: BigDecimal!
   " The average paid price in USD"
   avgPriceUSD: BigDecimal!
+  " The price of the market after the swap in XCHF"
+  newPriceXCHF: BigDecimal!
+  " The average paid price in XCHF"
+  avgPriceXCHF: BigDecimal!
   " index within the txn"
   logIndex: BigInt
 }
