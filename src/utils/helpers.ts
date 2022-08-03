@@ -285,9 +285,13 @@ export function getEntities(
     base.decimals = fetchTokenDecimals(baseAddress)
 
     base.derivedXCHF = ZERO_BD
+    base.derivedUSD = ZERO_BD
     base.tradeVolume = ZERO_BD
     base.tradeVolumeUSD = ZERO_BD
+    base.tradeVolumeXCHF = ZERO_BD
     base.totalValueLocked = ZERO_BD
+    base.totalValueLockedXCHF = ZERO_BD
+    base.totalValueLockedUSD = ZERO_BD
     base.txCount = ZERO_BI
   }
 
@@ -298,12 +302,18 @@ export function getEntities(
     token.name = fetchTokenName(tokenAddress)
     token.totalSupply = fetchTokenTotalSupply(tokenAddress)
     token.decimals = fetchTokenDecimals(tokenAddress)
-
+    token.totalShares = fetchTokenTotalShares(tokenAddress)
+  
     token.derivedXCHF = ZERO_BD
+    token.derivedUSD = ZERO_BD
     token.tradeVolume = ZERO_BD
     token.tradeVolumeUSD = ZERO_BD
+    token.tradeVolumeXCHF = ZERO_BD
     token.totalValueLocked = ZERO_BD
+    token.totalValueLockedXCHF = ZERO_BD
+    token.totalValueLockedUSD = ZERO_BD
     token.txCount = ZERO_BI
+    token.firstTradePriceXCHF = ZERO_BD
   }
   const entities  = new Entities(registry,brokerbot,base,token)
   return entities
