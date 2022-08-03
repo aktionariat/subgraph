@@ -71,11 +71,15 @@ export function handleTrade(event: Trade): void {
     token.totalShares = fetchTokenTotalShares(event.params.token)
 
     token.derivedXCHF = ZERO_BD
+    token.derivedUSD = ZERO_BD
     token.tradeVolume = ZERO_BD
     token.tradeVolumeUSD = ZERO_BD
     token.tradeVolumeXCHF = ZERO_BD
     token.totalValueLocked = ZERO_BD
+    token.totalValueLockedXCHF = ZERO_BD
+    token.totalValueLockedUSD = ZERO_BD
     token.txCount = ZERO_BI
+    token.firstTradePriceXCHF = ZERO_BD
   }
   
   let amountBase = convertTokenToDecimal(event.params.totPrice, base.decimals)
@@ -139,6 +143,10 @@ export function handleTrade(event: Trade): void {
   token.totalShares = fetchTokenTotalShares(event.params.token)
   if(token.totalShares !== null) {
     token.marketCap = token.derivedXCHF.times(token.totalShares!.toBigDecimal())
+  }
+  // if token initial where given out with at price 0
+  if (token.firstTradePriceXCHF == ZERO_BD){
+    token.firstTradePriceXCHF = token.derivedXCHF
   }
 
   // update txn counts
