@@ -175,8 +175,9 @@ export function handleTrade(event: Trade): void {
   // update swap event
   swap.transaction = transaction.id
   swap.brokerbot = brokerbot.id
+  swap.token = token.id
+  swap.base = base.id
   swap.timestamp = transaction.timestamp
-  swap.transaction = transaction.id
   swap.sender = event.params.who
   swap.isBuy = event.params.amount > ZERO_BI
   swap.amountBase = amountBase
@@ -189,6 +190,8 @@ export function handleTrade(event: Trade): void {
   }
   swap.newPriceUSD = convertToUsd(base.id, swap.newPriceBase)
   swap.avgPriceUSD = convertToUsd(base.id, swap.avgPriceBase)
+  swap.newPriceXCHF = convertToChf(Address.fromString(base.id), swap.newPriceBase)
+  swap.avgPriceXCHF = convertToChf(Address.fromString(base.id), swap.newPriceBase)
   swap.logIndex = event.logIndex
   swap.save()
 
