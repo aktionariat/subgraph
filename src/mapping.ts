@@ -176,8 +176,7 @@ export function handleTrade(event: Trade): void {
     transaction.timestamp = event.block.timestamp
   }
   let swap = new SwapEvent(
-    event.transaction.hash
-      .toHexString()
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
 
   // update swap event
