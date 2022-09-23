@@ -207,17 +207,17 @@ export function convertToUsd(tokenAddress: string, value: BigDecimal): BigDecima
   let network = dataSource.network();
   // mainnet gets price thru chainlink feed
   if (network == 'mainnet') {
-    let priceFeedRegitryContract = AggregatorV3Interface.bind(CHAINLINK_FEED_REGISTRY_ADDRESS)
+    let priceFeedRegistryContract = AggregatorV3Interface.bind(CHAINLINK_FEED_REGISTRY_ADDRESS)
     if (tokenAddress == XCHF_ADDRESS.toHexString()) {
-    // tokenAddress = CHAIN_LINK_CHF_ADDRESS
+      // tokenAddress = CHAIN_LINK_CHF_ADDRESS
+      // Returns the latest price of chf/usd pair from chainlink with 8 decimals
+      let result = priceFeedRegistryContract.try_latestRoundData()
+      if (!result.reverted) {
+        let resultInDecimals = new BigDecimal(result.value.value1).div(BigDecimal.fromString("100000000"))
+        return value.times(resultInDecimals)
+      }
+      log.warning('got reverted {} address: {}', [result.reverted.toString(), tokenAddress])
     }
-    // Returns the latest price of chf/usd pair from chainlink with 8 decimals
-    let result = priceFeedRegitryContract.try_latestRoundData()
-    if (!result.reverted) {
-      let resultInDecimals = new BigDecimal(result.value.value1).div(BigDecimal.fromString("100000000"))
-      return value.times(resultInDecimals)
-    }
-    log.warning('got reverted {} address: {}', [result.reverted.toString(), tokenAddress])
     return value    
   } else {
     // other networks (optimism) gets price over uniswap
