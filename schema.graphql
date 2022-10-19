@@ -55,6 +55,14 @@ type Token @entity {
   totalValueLockedXCHF: BigDecimal!
   " tvl in derived USD"
   totalValueLockedUSD: BigDecimal!
+  " liquidity in terms of USD"
+  liquidityUSD: BigDecimal!
+  " liquidity in terms of XCHF"
+  liquidityXCHF: BigDecimal!
+  " total raised in XCHF"
+  totalRaisedXCHF: BigDecimal!
+  " total raised in USD"
+  totalRaisedUSD: BigDecimal!
   " derived price in XCHF"
   derivedXCHF: BigDecimal!
   " derived price in usd "
@@ -363,6 +371,14 @@ type TokenWeekData @entity {
   totalValueLockedXCHF: BigDecimal!
   " tvl across all brokerbots in USD "
   totalValueLockedUSD: BigDecimal!
+  " liquidity in terms of USD"
+  liquidityUSD: BigDecimal!
+  " liquidity in terms of XCHF"
+  liquidityXCHF: BigDecimal!
+  " raised in XCHF"
+  raisedXCHF: BigDecimal!
+  " raised in USD"
+  raisedUSD: BigDecimal!
   " price at end of period in XCHF "
   priceXCHF: BigDecimal!
   " price at end of period in USD "
@@ -396,6 +412,14 @@ type TokenDayData @entity {
   totalValueLockedXCHF: BigDecimal!
   " tvl across all brokerbots in USD "
   totalValueLockedUSD: BigDecimal!
+  " liquidity in terms of USD"
+  liquidityUSD: BigDecimal!
+  " liquidity in terms of XCHF"
+  liquidityXCHF: BigDecimal!
+  " raised in XCHF"
+  raisedXCHF: BigDecimal!
+  " raised in USD"
+  raisedUSD: BigDecimal!
   " price at end of period in XCHF "
   priceXCHF: BigDecimal!
   " price at end of period in USD "
@@ -429,6 +453,14 @@ type TokenHourData @entity {
   totalValueLockedXCHF: BigDecimal!
   " tvl across all pools in  USD "
   totalValueLockedUSD: BigDecimal!
+  " liquidity in terms of USD"
+  liquidityUSD: BigDecimal!
+  " liquidity in terms of XCHF"
+  liquidityXCHF: BigDecimal!
+  " raised in XCHF"
+  raisedXCHF: BigDecimal!
+  " raised in USD"
+  raisedUSD: BigDecimal!
   " price at end of period in XCHF "
   priceXCHF: BigDecimal!
   " price at end of period in USD "

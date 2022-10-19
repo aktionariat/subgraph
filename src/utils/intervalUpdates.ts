@@ -281,6 +281,17 @@ export function updateTokenWeekData(token: Token, event: ethereum.Event, swap:Sw
   tokenWeekData.volume = tokenWeekData.volume.plus(swap.amountToken)
   tokenWeekData.volumeUSD = tokenWeekData.volumeUSD.plus(swap.amountUSD)
   tokenWeekData.volumeXCHF = tokenWeekData.volumeXCHF.plus(swap.amountXCHF)
+  // liqudity metrics
+  tokenWeekData.liquidityXCHF = token.liquidityXCHF
+  tokenWeekData.liquidityUSD = token.liquidityUSD
+  // raised metrics
+  if (swap.isBuy) {
+    tokenWeekData.raisedXCHF = tokenWeekData.raisedXCHF.plus(swap.amountXCHF)
+    tokenWeekData.raisedUSD = tokenWeekData.raisedUSD.plus(swap.amountUSD)
+  } else {
+    tokenWeekData.raisedXCHF = tokenWeekData.raisedXCHF.minus(swap.amountXCHF)
+    tokenWeekData.raisedUSD = tokenWeekData.raisedUSD.minus(swap.amountUSD)
+  }
   tokenWeekData.save()
 
   return tokenWeekData as TokenWeekData
@@ -327,6 +338,17 @@ export function updateTokenDayData(token: Token, event: ethereum.Event, swap:Swa
   tokenDayData.volume = tokenDayData.volume.plus(swap.amountBase)
   tokenDayData.volumeUSD = tokenDayData.volumeUSD.plus(swap.amountUSD)
   tokenDayData.volumeXCHF = tokenDayData.volumeXCHF.plus(swap.amountXCHF)
+  // liqudity metrics
+  tokenDayData.liquidityXCHF = token.liquidityXCHF
+  tokenDayData.liquidityUSD = token.liquidityUSD
+  // raised metrics
+  if (swap.isBuy) {
+    tokenDayData.raisedXCHF = tokenDayData.raisedXCHF.plus(swap.amountXCHF)
+    tokenDayData.raisedUSD = tokenDayData.raisedUSD.plus(swap.amountUSD)
+  } else {
+    tokenDayData.raisedXCHF = tokenDayData.raisedXCHF.minus(swap.amountXCHF)
+    tokenDayData.raisedUSD = tokenDayData.raisedUSD.minus(swap.amountUSD)
+  }
   tokenDayData.save()
 
   return tokenDayData as TokenDayData
@@ -374,6 +396,17 @@ export function updateTokenHourData(token: Token, event: ethereum.Event, swap:Sw
   tokenHourData.volume = tokenHourData.volume.plus(swap.amountToken)
   tokenHourData.volumeUSD = tokenHourData.volumeUSD.plus(swap.amountUSD)
   tokenHourData.volumeXCHF = tokenHourData.volumeXCHF.plus(swap.amountXCHF)
+  // liqudity metrics
+  tokenHourData.liquidityXCHF = token.liquidityXCHF
+  tokenHourData.liquidityUSD = token.liquidityUSD
+  // raised metrics
+  if (swap.isBuy) {
+    tokenHourData.raisedXCHF = tokenHourData.raisedXCHF.plus(swap.amountXCHF)
+    tokenHourData.raisedUSD = tokenHourData.raisedUSD.plus(swap.amountUSD)
+  } else {
+    tokenHourData.raisedXCHF = tokenHourData.raisedXCHF.minus(swap.amountXCHF)
+    tokenHourData.raisedUSD = tokenHourData.raisedUSD.minus(swap.amountUSD)
+  }
   tokenHourData.save()
 
   return tokenHourData as TokenHourData

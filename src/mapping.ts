@@ -121,6 +121,9 @@ export function handleTrade(event: Trade): void {
   if (event.params.amount > ZERO_BI) {
     brokerbot.totalRaisedXCHF = brokerbot.totalRaisedXCHF.plus(amountXCHF)
     brokerbot.totalRaisedUSD = brokerbot.totalRaisedUSD.plus(amountUSD)
+  } else {
+    brokerbot.totalRaisedXCHF = brokerbot.totalRaisedXCHF.minus(amountXCHF)
+    brokerbot.totalRaisedUSD = brokerbot.totalRaisedUSD.minus(amountUSD)
   }
   brokerbot.liquidityXCHF = convertToChf(Address.fromString(base.id), brokerbot.reserveBase)
   brokerbot.liquidityUSD = convertToUsd(base.id, brokerbot.reserveBase)
@@ -141,7 +144,15 @@ export function handleTrade(event: Trade): void {
   token.totalValueLocked = token.totalValueLocked.plus(brokerbotTokenBalance)
   token.totalValueLockedXCHF = convertToChf(Address.fromString(base.id), token.totalValueLocked.times(brokerbot.basePrice))
   token.totalValueLockedUSD = convertToUsd(base.id, token.totalValueLocked.times(brokerbot.basePrice))
-
+  if (event.params.amount > ZERO_BI) {
+    token.totalRaisedXCHF = token.totalRaisedXCHF.plus(amountXCHF)
+    token.totalRaisedUSD = token.totalRaisedUSD.plus(amountUSD)
+  } else {
+    token.totalRaisedXCHF = token.totalRaisedXCHF.minus(amountXCHF)
+    token.totalRaisedUSD = token.totalRaisedUSD.minus(amountUSD)
+  }
+  token.liquidityXCHF = brokerbot.liquidityXCHF
+  token.liquidityUSD = brokerbot.liquidityUSD
   token.totalSupply = fetchTokenTotalSupply(event.params.token)
   token.derivedXCHF = convertToChf(Address.fromString(base.id), brokerbot.basePrice)
   token.derivedUSD = convertToUsd(base.id, brokerbot.basePrice)
