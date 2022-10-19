@@ -3,7 +3,9 @@ type Registry @entity {
   id: ID!
   " amount of pools created"
   marketCount: BigInt!
-  " amoutn of transactions all time"
+  " amount of tokens "
+  tokenCount: BigInt!
+  " amount of transactions all time"
   txCount: BigInt!
   " total volume all time in USD"
   totalVolumeUSD: BigDecimal!
@@ -41,6 +43,8 @@ type Token @entity {
   totalSupply: BigInt!
   " total shares "
   totalShares: BigInt
+  " markets "
+  brokerbots: [Brokerbot!]! @derivedFrom(field: "token")
   " volume in token units"
   tradeVolume: BigDecimal!
   " volume in derived XCHF"
@@ -79,7 +83,7 @@ type Brokerbot @entity {
 
   " mirrored from the smart contract"
   base: Token!
-  token: Token!
+  token: Token! 
   reserveBase: BigDecimal!
   reserveToken: BigDecimal!
   totalSupply: BigDecimal!

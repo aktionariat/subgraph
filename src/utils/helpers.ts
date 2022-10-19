@@ -269,13 +269,12 @@ export function getEntities(
     brokerbot = new Brokerbot(marketAddress.toHexString())
     brokerbot.base = baseAddress.toHexString()
     brokerbot.token = tokenAddress.toHexString()
+
     registry.marketCount = registry.marketCount.plus(ONE_BI)
   }
 
-  // load the tokens
+  // load the base token
   let base = Token.load(brokerbot.base)
-  let token = Token.load(brokerbot.token)
-
   //fetch info if null
   if (base === null) {
     base = new Token(baseAddress.toHexString())
@@ -295,6 +294,8 @@ export function getEntities(
     base.txCount = ZERO_BI
   }
 
+  // load share token
+  let token = Token.load(brokerbot.token)
   //fetch info if null
   if (token === null) {
     token = new Token(tokenAddress.toHexString())
@@ -314,6 +315,9 @@ export function getEntities(
     token.totalValueLockedUSD = ZERO_BD
     token.txCount = ZERO_BI
     token.firstTradePriceXCHF = ZERO_BD
+
+    // if there is a new token means new market on the registry
+    registry.tokenCount = registry.tokenCount.plus(ONE_BI)
   }
   const entities  = new Entities(registry,brokerbot,base,token)
   return entities
