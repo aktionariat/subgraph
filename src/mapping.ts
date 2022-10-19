@@ -40,10 +40,8 @@ export function handleTrade(event: Trade): void {
     registry.marketCount = registry.marketCount.plus(ONE_BI)
   }
 
-  // load the tokens
+  // load the base currency
   let base = Token.load(brokerbot.base)
-  let token = Token.load(brokerbot.token)
-
   //fetch info if null
   if (base === null) {
     base = new Token(event.params.base.toHexString())
@@ -61,6 +59,8 @@ export function handleTrade(event: Trade): void {
     base.txCount = ZERO_BI
   }
 
+  // load share token
+  let token = Token.load(brokerbot.token)
   //fetch info if null
   if (token === null) {
     token = new Token(event.params.token.toHexString())
@@ -80,6 +80,9 @@ export function handleTrade(event: Trade): void {
     token.totalValueLockedUSD = ZERO_BD
     token.txCount = ZERO_BI
     token.firstTradePriceXCHF = ZERO_BD
+
+    // if there is a new token means new market on the registry
+    registry.tokenCount = registry.tokenCount.plus(ONE_BI)
   }
   
   let amountBase = convertTokenToDecimal(event.params.totPrice, base.decimals)
