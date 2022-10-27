@@ -92,7 +92,7 @@ export function handleTrade(event: Trade): void {
 
   // reset total liquidity amounts
   base.totalValueLocked = base.totalValueLocked.minus(brokerbot.reserveBase)
-  token.totalValueLocked = token.totalValueLocked.minus(brokerbot.reserveToken)
+  // token.totalValueLocked = token.totalValueLocked.minus(brokerbot.reserveToken) // is overwritten with brokerbot data, right now only one active 
   registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.minus(brokerbot.totalValueLockedXCHF)
   registry.totalValueLockedUSD = registry.totalValueLockedUSD.minus(brokerbot.totalValueLockedUSD)
   registry.totalRaisedXCHF = registry.totalRaisedXCHF.minus(brokerbot.totalRaisedXCHF)
@@ -144,9 +144,14 @@ export function handleTrade(event: Trade): void {
   token.tradeVolume = token.tradeVolume.plus(amountToken)
   token.tradeVolumeXCHF = token.tradeVolumeXCHF.plus(amountXCHF)
   token.tradeVolumeUSD = token.tradeVolumeUSD.plus(amountUSD)
-  token.totalValueLocked = token.totalValueLocked.plus(brokerbotTokenBalance)
-  token.totalValueLockedXCHF = convertToChf(Address.fromString(base.id), token.totalValueLocked.times(brokerbot.basePrice))
-  token.totalValueLockedUSD = convertToUsd(base.id, token.totalValueLocked.times(brokerbot.basePrice))
+  // only token tvl
+  // token.totalValueLocked = token.totalValueLocked.plus(brokerbotTokenBalance)
+  // token.totalValueLockedXCHF = convertToChf(Address.fromString(base.id), token.totalValueLocked.times(brokerbot.basePrice))
+  // token.totalValueLockedUSD = convertToUsd(base.id, token.totalValueLocked.times(brokerbot.basePrice))
+  // token+base currency tvl
+  token.totalValueLocked = brokerbot.totalValueLockedXCHF.div(brokerbot.basePrice);
+  token.totalValueLockedXCHF = brokerbot.totalValueLockedXCHF
+  token.totalValueLockedUSD = brokerbot.totalValueLockedUSD
   if (event.params.amount > ZERO_BI) {
     token.totalRaisedXCHF = token.totalRaisedXCHF.plus(amountXCHF)
     token.totalRaisedUSD = token.totalRaisedUSD.plus(amountUSD)
