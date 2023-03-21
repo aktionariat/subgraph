@@ -1,14 +1,14 @@
-# subgraph
+# Subgraph
 Subgraph of the brokerbot/market data
 
-# upgrade schema
+# Upgrade schema
 
 If the the schema is updated the generated files needs to be updated
 ```
 yarn codegen
 ```
 
-# prepare subgraph
+# Prepare Subgraph
 The networks mainnet and optimism are supported, to use the right yaml file to deploy you need to prepare the subgraph with the right template.
 
 Mainnet
@@ -20,7 +20,7 @@ Optimism
 yarn prepare:optimism
 ```
 
-# deploy subgrah
+# Deploy Subgraph
 After the preparation the subgraph is deploy with
 
 Mainnet
