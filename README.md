@@ -21,7 +21,9 @@ yarn prepare:optimism
 ```
 
 # Deploy Subgraph
-After the preparation the subgraph is deploy with
+To get an access token of the Graph hosted service read their doc here https://thegraph.com/docs/en/deploying/deploying-a-subgraph-to-hosted/
+
+After the preparation of the subgraph and linking your access token, you can deploy with
 
 Mainnet
 ```
