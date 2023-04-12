@@ -9,7 +9,7 @@ import { ERC20Draggable } from '../../generated/BrokerbotRegistry/ERC20Draggable
 import { Brokerbot as BrokerbotContract } from '../../generated/BrokerbotRegistry/Brokerbot'
 import { StaticTokenDefinition } from '../staticTokenDefinition'
 import {   
-  Brokerbot,
+  Pair,
   Registry,
   Token
 } from "../../generated/schema"
@@ -36,12 +36,12 @@ export let BI_18 = BigInt.fromI32(18)
 
 export class Entities {
   registry: Registry
-  brokerbot: Brokerbot
+  pair: Pair
   base: Token
   token: Token
-  constructor(_r:Registry, _m:Brokerbot, _b:Token, _t:Token){
+  constructor(_r:Registry, _m:Pair, _b:Token, _t:Token){
     this.registry = _r 
-    this.brokerbot = _m
+    this.pair = _m
     this.base = _b
     this.token = _t
   }
@@ -263,18 +263,18 @@ export function getEntities(
   let registry = getRegistry(registryAddress.toHexString())
 
   // load market
-  let brokerbot = Brokerbot.load(marketAddress.toHexString())
-  if (brokerbot === null) {
+  let pair = Pair.load(marketAddress.toHexString())
+  if (pair === null) {
     BrokerbotTemplate.create(marketAddress)
-    brokerbot = new Brokerbot(marketAddress.toHexString())
-    brokerbot.base = baseAddress.toHexString()
-    brokerbot.token = tokenAddress.toHexString()
+    pair = new Pair(marketAddress.toHexString())
+    pair.token1 = baseAddress.toHexString()
+    pair.token0 = tokenAddress.toHexString()
 
     registry.marketCount = registry.marketCount.plus(ONE_BI)
   }
 
   // load the base token
-  let base = Token.load(brokerbot.base)
+  let base = Token.load(pair.token1)
   //fetch info if null
   if (base === null) {
     base = new Token(baseAddress.toHexString())
@@ -295,7 +295,7 @@ export function getEntities(
   }
 
   // load share token
-  let token = Token.load(brokerbot.token)
+  let token = Token.load(pair.token0)
   //fetch info if null
   if (token === null) {
     token = new Token(tokenAddress.toHexString())
@@ -319,7 +319,7 @@ export function getEntities(
     // if there is a new token means new market on the registry
     registry.tokenCount = registry.tokenCount.plus(ONE_BI)
   }
-  const entities  = new Entities(registry,brokerbot,base,token)
+  const entities  = new Entities(registry,pair,base,token)
   return entities
 }
 

@@ -1,15 +1,15 @@
 import {
   AktionariatWeekData,
   AktionariatDayData,
-  Brokerbot,
-  BrokerbotDayData,
-  BrokerbotHourData,
+  Pair,
+  PairDayData,
+  PairHourData,
   Registry,
   Token,
   Swap,
   TokenDayData,
   TokenHourData,
-  BrokerbotWeekData,
+  PairWeekData,
   TokenWeekData
 } from "../../generated/schema"
 import { dataSource, ethereum, log } from '@graphprotocol/graph-ts'
@@ -72,119 +72,119 @@ export function updateAktionariatDayData(event: ethereum.Event, swap:Swap): Akti
   return aktionariatDayData as AktionariatDayData
 }
 
-export function updateBrokerbotWeekData(event: ethereum.Event, swap:Swap): BrokerbotWeekData {
+export function updatePairWeekData(event: ethereum.Event, swap:Swap): PairWeekData {
   let timestamp = event.block.timestamp.toI32()
   let weekID = timestamp / 604800
   let dayStartTimestamp = weekID * 604800
-  let weekBrokerbotID = event.address
+  let weekPairID = event.address
     .toHexString()
     .concat('-')
     .concat(weekID.toString())
-  let brokerbot = Brokerbot.load(event.address.toHexString())
-  let brokerbotWeekData = BrokerbotWeekData.load(weekBrokerbotID)
-  if (brokerbot !== null) {
-    if (brokerbotWeekData === null) {
-      brokerbotWeekData = new BrokerbotWeekData(weekBrokerbotID)
-      brokerbotWeekData.date = dayStartTimestamp
-      brokerbotWeekData.brokerbot = brokerbot.id
+  let pair = Pair.load(event.address.toHexString())
+  let pairWeekData = PairWeekData.load(weekPairID)
+  if (pair !== null) {
+    if (pairWeekData === null) {
+      pairWeekData = new PairWeekData(weekPairID)
+      pairWeekData.date = dayStartTimestamp
+      pairWeekData.pair = pair.id
       // things that dont get initialized always
-      brokerbotWeekData.volumeBase = constants.BIGDECIMAL_ZERO
-      brokerbotWeekData.volumeToken = constants.BIGDECIMAL_ZERO
-      brokerbotWeekData.volumeUSD = constants.BIGDECIMAL_ZERO
-      brokerbotWeekData.volumeXCHF = constants.BIGDECIMAL_ZERO
-      brokerbotWeekData.liquidityUSD = constants.BIGDECIMAL_ZERO
-      brokerbotWeekData.liquidityXCHF = constants.BIGDECIMAL_ZERO
-      brokerbotWeekData.txCount = constants.BIGINT_ZERO
-      brokerbotWeekData.open = brokerbot.tokenPrice
-      brokerbotWeekData.high = brokerbot.tokenPrice
-      brokerbotWeekData.low = brokerbot.tokenPrice
-      brokerbotWeekData.close = brokerbot.tokenPrice
+      pairWeekData.volumeToken1 = constants.BIGDECIMAL_ZERO
+      pairWeekData.volumeToken0 = constants.BIGDECIMAL_ZERO
+      pairWeekData.volumeUSD = constants.BIGDECIMAL_ZERO
+      pairWeekData.volumeXCHF = constants.BIGDECIMAL_ZERO
+      pairWeekData.liquidityUSD = constants.BIGDECIMAL_ZERO
+      pairWeekData.liquidityXCHF = constants.BIGDECIMAL_ZERO
+      pairWeekData.txCount = constants.BIGINT_ZERO
+      pairWeekData.open = pair.token1Price
+      pairWeekData.high = pair.token1Price
+      pairWeekData.low = pair.token1Price
+      pairWeekData.close = pair.token1Price
     }
 
-    if (brokerbot.tokenPrice.gt(brokerbotWeekData.high)) {
-      brokerbotWeekData.high = brokerbot.tokenPrice
+    if (pair.token1Price.gt(pairWeekData.high)) {
+      pairWeekData.high = pair.token1Price
     }
-    if (brokerbot.tokenPrice.lt(brokerbotWeekData.low)) {
-      brokerbotWeekData.low = brokerbot.tokenPrice
+    if (pair.token1Price.lt(pairWeekData.low)) {
+      pairWeekData.low = pair.token1Price
     }
 
-    brokerbotWeekData.basePrice = brokerbot.basePrice
-    brokerbotWeekData.tokenPrice = brokerbot.tokenPrice
-    brokerbotWeekData.close = brokerbot.basePrice
-    brokerbotWeekData.priceUSD = brokerbot.priceUSD
-    brokerbotWeekData.priceXCHF = brokerbot.priceXCHF
-    brokerbotWeekData.totalValueLockedUSD = brokerbot.totalValueLockedUSD
-    brokerbotWeekData.totalValueLockedXCHF = brokerbot.totalValueLockedXCHF
-    brokerbotWeekData.liquidityUSD = brokerbot.liquidityUSD
-    brokerbotWeekData.liquidityXCHF = brokerbot.liquidityXCHF
-    brokerbotWeekData.txCount = brokerbotWeekData.txCount.plus(constants.BIGINT_ONE)
+    pairWeekData.token1Price = pair.token1Price
+    pairWeekData.token1Price = pair.token1Price
+    pairWeekData.close = pair.token1Price
+    pairWeekData.priceUSD = pair.priceUSD
+    pairWeekData.priceXCHF = pair.priceXCHF
+    pairWeekData.totalValueLockedUSD = pair.totalValueLockedUSD
+    pairWeekData.totalValueLockedXCHF = pair.totalValueLockedXCHF
+    pairWeekData.liquidityUSD = pair.liquidityUSD
+    pairWeekData.liquidityXCHF = pair.liquidityXCHF
+    pairWeekData.txCount = pairWeekData.txCount.plus(constants.BIGINT_ONE)
     // update volume metrics
-    brokerbotWeekData.volumeBase = brokerbotWeekData.volumeBase.plus(swap.amountBase)
-    brokerbotWeekData.volumeToken = brokerbotWeekData.volumeToken.plus(swap.amountToken)
-    brokerbotWeekData.volumeUSD = brokerbotWeekData.volumeUSD.plus(swap.amountUSD)
-    brokerbotWeekData.volumeXCHF = brokerbotWeekData.volumeXCHF.plus(swap.amountXCHF)
-    brokerbotWeekData.save()
+    pairWeekData.volumeToken1 = pairWeekData.volumeToken1.plus(swap.amountToken1)
+    pairWeekData.volumeToken0 = pairWeekData.volumeToken0.plus(swap.amountToken0)
+    pairWeekData.volumeUSD = pairWeekData.volumeUSD.plus(swap.amountUSD)
+    pairWeekData.volumeXCHF = pairWeekData.volumeXCHF.plus(swap.amountXCHF)
+    pairWeekData.save()
   }
 
-  return brokerbotWeekData as BrokerbotWeekData
+  return pairWeekData as PairWeekData
 }
 
-export function updateBrokerbotDayData(event: ethereum.Event, swap:Swap): BrokerbotDayData {
+export function updatePairDayData(event: ethereum.Event, swap:Swap): PairDayData {
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
   let dayStartTimestamp = dayID * 86400
-  let dayBrokerbotID = event.address
+  let dayPairID = event.address
     .toHexString()
     .concat('-')
     .concat(dayID.toString())
-  let brokerbot = Brokerbot.load(event.address.toHexString())
-  let brokerbotDayData = BrokerbotDayData.load(dayBrokerbotID)
-  if (brokerbot !== null) {
-    if (brokerbotDayData === null) {
-      brokerbotDayData = new BrokerbotDayData(dayBrokerbotID)
-      brokerbotDayData.date = dayStartTimestamp
-      brokerbotDayData.brokerbot = brokerbot.id
+  let pair = Pair.load(event.address.toHexString())
+  let pairDayData = PairDayData.load(dayPairID)
+  if (pair !== null) {
+    if (pairDayData === null) {
+      pairDayData = new PairDayData(dayPairID)
+      pairDayData.date = dayStartTimestamp
+      pairDayData.pair = pair.id
       // things that dont get initialized always
-      brokerbotDayData.volumeBase = constants.BIGDECIMAL_ZERO
-      brokerbotDayData.volumeToken = constants.BIGDECIMAL_ZERO
-      brokerbotDayData.volumeUSD = constants.BIGDECIMAL_ZERO
-      brokerbotDayData.volumeXCHF = constants.BIGDECIMAL_ZERO
-      brokerbotDayData.txCount = constants.BIGINT_ZERO
-      brokerbotDayData.open = brokerbot.tokenPrice
-      brokerbotDayData.high = brokerbot.tokenPrice
-      brokerbotDayData.low = brokerbot.tokenPrice
-      brokerbotDayData.close = brokerbot.tokenPrice
+      pairDayData.volumeToken1 = constants.BIGDECIMAL_ZERO
+      pairDayData.volumeToken0 = constants.BIGDECIMAL_ZERO
+      pairDayData.volumeUSD = constants.BIGDECIMAL_ZERO
+      pairDayData.volumeXCHF = constants.BIGDECIMAL_ZERO
+      pairDayData.txCount = constants.BIGINT_ZERO
+      pairDayData.open = pair.token1Price
+      pairDayData.high = pair.token1Price
+      pairDayData.low = pair.token1Price
+      pairDayData.close = pair.token1Price
     }
 
-    if (brokerbot.tokenPrice.gt(brokerbotDayData.high)) {
-      brokerbotDayData.high = brokerbot.tokenPrice
+    if (pair.token1Price.gt(pairDayData.high)) {
+      pairDayData.high = pair.token1Price
     }
-    if (brokerbot.tokenPrice.lt(brokerbotDayData.low)) {
-      brokerbotDayData.low = brokerbot.tokenPrice
+    if (pair.token1Price.lt(pairDayData.low)) {
+      pairDayData.low = pair.token1Price
     }
 
-    brokerbotDayData.basePrice = brokerbot.basePrice
-    brokerbotDayData.tokenPrice = brokerbot.tokenPrice
-    brokerbotDayData.close = brokerbot.basePrice
-    brokerbotDayData.priceUSD = brokerbot.priceUSD
-    brokerbotDayData.priceXCHF = brokerbot.priceXCHF
-    brokerbotDayData.totalValueLockedUSD = brokerbot.totalValueLockedUSD
-    brokerbotDayData.totalValueLockedXCHF = brokerbot.totalValueLockedXCHF
-    brokerbotDayData.liquidityXCHF = brokerbot.liquidityXCHF
-    brokerbotDayData.liquidityUSD = brokerbot.liquidityUSD
-    brokerbotDayData.txCount = brokerbotDayData.txCount.plus(constants.BIGINT_ONE)
+    pairDayData.token1Price = pair.token1Price
+    pairDayData.token1Price = pair.token1Price
+    pairDayData.close = pair.token1Price
+    pairDayData.priceUSD = pair.priceUSD
+    pairDayData.priceXCHF = pair.priceXCHF
+    pairDayData.totalValueLockedUSD = pair.totalValueLockedUSD
+    pairDayData.totalValueLockedXCHF = pair.totalValueLockedXCHF
+    pairDayData.liquidityXCHF = pair.liquidityXCHF
+    pairDayData.liquidityUSD = pair.liquidityUSD
+    pairDayData.txCount = pairDayData.txCount.plus(constants.BIGINT_ONE)
     // update volume metrics
-    brokerbotDayData.volumeBase = brokerbotDayData.volumeBase.plus(swap.amountBase)
-    brokerbotDayData.volumeToken = brokerbotDayData.volumeToken.plus(swap.amountToken)
-    brokerbotDayData.volumeUSD = brokerbotDayData.volumeUSD.plus(swap.amountUSD)
-    brokerbotDayData.volumeXCHF = brokerbotDayData.volumeXCHF.plus(swap.amountXCHF)
-    brokerbotDayData.save()
+    pairDayData.volumeToken1 = pairDayData.volumeToken1.plus(swap.amountToken1)
+    pairDayData.volumeToken0 = pairDayData.volumeToken0.plus(swap.amountToken0)
+    pairDayData.volumeUSD = pairDayData.volumeUSD.plus(swap.amountUSD)
+    pairDayData.volumeXCHF = pairDayData.volumeXCHF.plus(swap.amountXCHF)
+    pairDayData.save()
   }
 
-  return brokerbotDayData as BrokerbotDayData
+  return pairDayData as PairDayData
 }
 
-export function updateBrokerbotHourData(event: ethereum.Event, swap:Swap): BrokerbotHourData {
+export function updatePairHourData(event: ethereum.Event, swap:Swap): PairHourData {
   let timestamp = event.block.timestamp.toI32()
   let hourIndex = timestamp / 3600 // get unique hour within unix history
   let hourStartUnix = hourIndex * 3600 // want the rounded effect
@@ -192,52 +192,52 @@ export function updateBrokerbotHourData(event: ethereum.Event, swap:Swap): Broke
     .toHexString()
     .concat('-')
     .concat(hourIndex.toString())
-  let brokerbot = Brokerbot.load(event.address.toHexString())
-  let brokerbotHourData = BrokerbotHourData.load(hourPoolID)
-  if (brokerbot !== null) {
+  let pair = Pair.load(event.address.toHexString())
+  let pairHourData = PairHourData.load(hourPoolID)
+  if (pair !== null) {
 
-    if (brokerbotHourData === null) {
-      brokerbotHourData = new BrokerbotHourData(hourPoolID)
-      brokerbotHourData.periodStartUnix = hourStartUnix
-      brokerbotHourData.brokerbot = brokerbot.id
+    if (pairHourData === null) {
+      pairHourData = new PairHourData(hourPoolID)
+      pairHourData.periodStartUnix = hourStartUnix
+      pairHourData.pair = pair.id
       // things that dont get initialized always
-      brokerbotHourData.volumeBase = constants.BIGDECIMAL_ZERO
-      brokerbotHourData.volumeToken = constants.BIGDECIMAL_ZERO
-      brokerbotHourData.volumeUSD = constants.BIGDECIMAL_ZERO
-      brokerbotHourData.volumeXCHF = constants.BIGDECIMAL_ZERO
-      brokerbotHourData.txCount = constants.BIGINT_ZERO
-      brokerbotHourData.open = brokerbot.basePrice
-      brokerbotHourData.high = brokerbot.basePrice
-      brokerbotHourData.low = brokerbot.basePrice
-      brokerbotHourData.close = brokerbot.basePrice
+      pairHourData.volumeToken1 = constants.BIGDECIMAL_ZERO
+      pairHourData.volumeToken0 = constants.BIGDECIMAL_ZERO
+      pairHourData.volumeUSD = constants.BIGDECIMAL_ZERO
+      pairHourData.volumeXCHF = constants.BIGDECIMAL_ZERO
+      pairHourData.txCount = constants.BIGINT_ZERO
+      pairHourData.open = pair.token1Price
+      pairHourData.high = pair.token1Price
+      pairHourData.low = pair.token1Price
+      pairHourData.close = pair.token1Price
     }
     
-    if (brokerbot.basePrice.gt(brokerbotHourData.high)) {
-      brokerbotHourData.high = brokerbot.basePrice
+    if (pair.token1Price.gt(pairHourData.high)) {
+      pairHourData.high = pair.token1Price
     }
-    if (brokerbot.basePrice.lt(brokerbotHourData.low)) {
-      brokerbotHourData.low = brokerbot.basePrice
+    if (pair.token1Price.lt(pairHourData.low)) {
+      pairHourData.low = pair.token1Price
     }
     
-    brokerbotHourData.basePrice = brokerbot.basePrice
-    brokerbotHourData.tokenPrice = brokerbot.tokenPrice
-    brokerbotHourData.close = brokerbot.basePrice
-    brokerbotHourData.priceUSD = brokerbot.priceUSD
-    brokerbotHourData.priceXCHF = brokerbot.priceXCHF
-    brokerbotHourData.totalValueLockedUSD = brokerbot.totalValueLockedUSD
-    brokerbotHourData.totalValueLockedXCHF = brokerbot.totalValueLockedXCHF
-    brokerbotHourData.liquidityXCHF = brokerbot.liquidityXCHF
-    brokerbotHourData.liquidityUSD = brokerbot.liquidityUSD
-    brokerbotHourData.txCount = brokerbotHourData.txCount.plus(constants.BIGINT_ONE)
+    pairHourData.token1Price = pair.token1Price
+    pairHourData.token1Price = pair.token1Price
+    pairHourData.close = pair.token1Price
+    pairHourData.priceUSD = pair.priceUSD
+    pairHourData.priceXCHF = pair.priceXCHF
+    pairHourData.totalValueLockedUSD = pair.totalValueLockedUSD
+    pairHourData.totalValueLockedXCHF = pair.totalValueLockedXCHF
+    pairHourData.liquidityXCHF = pair.liquidityXCHF
+    pairHourData.liquidityUSD = pair.liquidityUSD
+    pairHourData.txCount = pairHourData.txCount.plus(constants.BIGINT_ONE)
     // update volume metrics  
-    brokerbotHourData.volumeBase = brokerbotHourData.volumeBase.plus(swap.amountBase)
-    brokerbotHourData.volumeToken = brokerbotHourData.volumeToken.plus(swap.amountToken)
-    brokerbotHourData.volumeUSD = brokerbotHourData.volumeUSD.plus(swap.amountUSD)
-    brokerbotHourData.volumeXCHF = brokerbotHourData.volumeXCHF.plus(swap.amountXCHF)
-    brokerbotHourData.save()
+    pairHourData.volumeToken1 = pairHourData.volumeToken1.plus(swap.amountToken1)
+    pairHourData.volumeToken0 = pairHourData.volumeToken0.plus(swap.amountToken0)
+    pairHourData.volumeUSD = pairHourData.volumeUSD.plus(swap.amountUSD)
+    pairHourData.volumeXCHF = pairHourData.volumeXCHF.plus(swap.amountXCHF)
+    pairHourData.save()
   }
     
-  return brokerbotHourData as BrokerbotHourData
+  return pairHourData as PairHourData
 }
 
 export function updateTokenWeekData(token: Token, event: ethereum.Event, swap:Swap): TokenWeekData {
@@ -278,7 +278,7 @@ export function updateTokenWeekData(token: Token, event: ethereum.Event, swap:Sw
   tokenWeekData.totalValueLockedUSD = token.totalValueLockedUSD
   tokenWeekData.totalValueLockedXCHF = token.totalValueLockedXCHF
   // update volmue metrics
-  tokenWeekData.volume = tokenWeekData.volume.plus(swap.amountToken)
+  tokenWeekData.volume = tokenWeekData.volume.plus(swap.amountToken0)
   tokenWeekData.volumeUSD = tokenWeekData.volumeUSD.plus(swap.amountUSD)
   tokenWeekData.volumeXCHF = tokenWeekData.volumeXCHF.plus(swap.amountXCHF)
   // liqudity metrics
@@ -335,7 +335,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event, swap:Swa
   tokenDayData.totalValueLockedUSD = token.totalValueLockedUSD
   tokenDayData.totalValueLockedXCHF = token.totalValueLockedXCHF
   // update volume metrics  
-  tokenDayData.volume = tokenDayData.volume.plus(swap.amountBase)
+  tokenDayData.volume = tokenDayData.volume.plus(swap.amountToken1)
   tokenDayData.volumeUSD = tokenDayData.volumeUSD.plus(swap.amountUSD)
   tokenDayData.volumeXCHF = tokenDayData.volumeXCHF.plus(swap.amountXCHF)
   // liqudity metrics
@@ -393,7 +393,7 @@ export function updateTokenHourData(token: Token, event: ethereum.Event, swap:Sw
   tokenHourData.totalValueLockedUSD = token.totalValueLockedUSD
   tokenHourData.totalValueLockedXCHF = token.totalValueLockedXCHF
   // update volume metrics
-  tokenHourData.volume = tokenHourData.volume.plus(swap.amountToken)
+  tokenHourData.volume = tokenHourData.volume.plus(swap.amountToken0)
   tokenHourData.volumeUSD = tokenHourData.volumeUSD.plus(swap.amountUSD)
   tokenHourData.volumeXCHF = tokenHourData.volumeXCHF.plus(swap.amountXCHF)
   // liqudity metrics

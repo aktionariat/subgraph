@@ -4,11 +4,11 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ aktionariat/brokerbot",
-    "deploy-op": "graph deploy --node https://api.thegraph.com/deploy/ aktionariat/brokerbot-optimism",
-    "create-local": "graph create --node http://localhost:8020/ aktionariat/brokerbot",
-    "remove-local": "graph remove --node http://localhost:8020/ aktionariat/brokerbot",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 aktionariat/brokerbot",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ aktionariat/brokerbot-uv2",
+    "deploy-op": "graph deploy --node https://api.thegraph.com/deploy/ aktionariat/brokerbot-optimism-uv2",
+    "create-local": "graph create --node http://localhost:8020/ aktionariat/brokerbot-uv2",
+    "remove-local": "graph remove --node http://localhost:8020/ aktionariat/brokerbot-uv2",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 aktionariat/brokerbot-uv2",
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
     "prepare:optimism": "mustache config/optimism.json subgraph-optimism.template.yaml > subgraph.yaml"
   },
