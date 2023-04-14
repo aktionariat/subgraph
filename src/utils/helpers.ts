@@ -241,7 +241,7 @@ export function getRegistry(registryAddress: string): Registry {
   let registry = Registry.load(registryAddress)
   if (registry === null) {
     registry = new Registry(registryAddress)
-    registry.marketCount = ZERO_BI
+    registry.pairCount = ZERO_BI
     registry.txCount = ZERO_BI
     registry.totalValueLockedUSD = ZERO_BD
     registry.totalValueLockedXCHF = ZERO_BD
@@ -270,7 +270,7 @@ export function getEntities(
     pair.token1 = baseAddress.toHexString()
     pair.token0 = tokenAddress.toHexString()
 
-    registry.marketCount = registry.marketCount.plus(ONE_BI)
+    registry.pairCount = registry.pairCount.plus(ONE_BI)
   }
 
   // load the base token

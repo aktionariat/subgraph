@@ -30,18 +30,20 @@ export function handleTrade(event: Trade): void {
   // load registry
   let registry = getRegistry(REGISTRY_ADDRESS.toHexString())
 
-  // load brokerbot
-  const BROKERBOT_ADDRESS = event.address.toHexString()
-  let brokerbot = Pair.load(BROKERBOT_ADDRESS)
-  if (brokerbot === null) {
-    brokerbot = new Pair(BROKERBOT_ADDRESS)
-    brokerbot.token1 = event.params.base.toHexString()
-    brokerbot.token0 = event.params.token.toHexString()
-    registry.marketCount = registry.marketCount.plus(ONE_BI)
+  // load pair
+  const PAIR_ADDRESS = event.address.toHexString()
+  let pair = Pair.load(PAIR_ADDRESS)
+  if (pair === null) {
+    pair = new Pair(PAIR_ADDRESS)
+    pair.token1 = event.params.base.toHexString()
+    pair.token0 = event.params.token.toHexString()
+    pair.createdAtTimestamp = event.block.timestamp
+    pair.createdAtBlockNumber = event.block.number
+    registry.pairCount = registry.pairCount.plus(ONE_BI)
   }
 
   // load the base currency
-  let token1 = Token.load(brokerbot.token1)
+  let token1 = Token.load(pair.token1)
   //fetch info if null
   if (token1 === null) {
     token1 = new Token(event.params.base.toHexString())
@@ -60,7 +62,7 @@ export function handleTrade(event: Trade): void {
   }
 
   // load share token
-  let token0 = Token.load(brokerbot.token0)
+  let token0 = Token.load(pair.token0)
   //fetch info if null
   if (token0 === null) {
     token0 = new Token(event.params.token.toHexString())
@@ -91,51 +93,51 @@ export function handleTrade(event: Trade): void {
   let amountXCHF = convertToChf(Address.fromString(token1.id), amountToken1)
 
   // reset total liquidity amounts
-  token1.totalValueLocked = token1.totalValueLocked.minus(brokerbot.reserveToken1)
-  token0.totalValueLocked = token0.totalValueLocked.minus(brokerbot.reserveToken0)
-  registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.minus(brokerbot.totalValueLockedXCHF)
-  registry.totalValueLockedUSD = registry.totalValueLockedUSD.minus(brokerbot.totalValueLockedUSD)
-  registry.totalRaisedXCHF = registry.totalRaisedXCHF.minus(brokerbot.totalRaisedXCHF)
-  registry.totalRaisedUSD = registry.totalRaisedUSD.minus(brokerbot.totalRaisedUSD)
-  registry.liquidityUSD = registry.liquidityUSD.minus(brokerbot.liquidityUSD)
-  registry.liquidityXCHF = registry.liquidityXCHF.minus(brokerbot.liquidityXCHF)
+  token1.totalValueLocked = token1.totalValueLocked.minus(pair.reserveToken1)
+  token0.totalValueLocked = token0.totalValueLocked.minus(pair.reserveToken0)
+  registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.minus(pair.totalValueLockedXCHF)
+  registry.totalValueLockedUSD = registry.totalValueLockedUSD.minus(pair.totalValueLockedUSD)
+  registry.totalRaisedXCHF = registry.totalRaisedXCHF.minus(pair.totalRaisedXCHF)
+  registry.totalRaisedUSD = registry.totalRaisedUSD.minus(pair.totalRaisedUSD)
+  registry.liquidityUSD = registry.liquidityUSD.minus(pair.liquidityUSD)
+  registry.liquidityXCHF = registry.liquidityXCHF.minus(pair.liquidityXCHF)
 
-  // get current brokerbot balance
-  let brokerbotToken1Balance  = convertTokenToDecimal(fetchTokenBalance(event.params.base, Address.fromString(brokerbot.id)), token1.decimals)
-  let brokerbotToken0Balance = convertTokenToDecimal(fetchTokenBalance(event.params.token, Address.fromString(brokerbot.id)), token0.decimals)
+  // get current pair balance
+  let pairToken1Balance  = convertTokenToDecimal(fetchTokenBalance(event.params.base, Address.fromString(pair.id)), token1.decimals)
+  let pairToken0Balance = convertTokenToDecimal(fetchTokenBalance(event.params.token, Address.fromString(pair.id)), token0.decimals)
   
   
-  // update brokerbot data
-  brokerbot.volumeToken1 = brokerbot.volumeToken1.plus(amountToken1)
-  brokerbot.volumeToken0= brokerbot.volumeToken0.plus(amountToken0)
-  brokerbot.volumeUSD = brokerbot.volumeUSD.plus(amountUSD)
-  brokerbot.volumeXCHF = brokerbot.volumeXCHF.plus(amountXCHF)
-  brokerbot.txCount = brokerbot.txCount.plus(ONE_BI)
-  brokerbot.reserveToken1 = brokerbotToken1Balance
-  brokerbot.reserveToken0 = brokerbotToken0Balance
-  brokerbot.token1Price = convertTokenToDecimal(event.params.newprice, token1.decimals)
-  if (brokerbot.token1Price.gt(ZERO_BD)) {
-    brokerbot.token0Price = ONE_BD.div(brokerbot.token1Price)
+  // update pair data
+  pair.volumeToken1 = pair.volumeToken1.plus(amountToken1)
+  pair.volumeToken0= pair.volumeToken0.plus(amountToken0)
+  pair.volumeUSD = pair.volumeUSD.plus(amountUSD)
+  pair.volumeXCHF = pair.volumeXCHF.plus(amountXCHF)
+  pair.txCount = pair.txCount.plus(ONE_BI)
+  pair.reserveToken1 = pairToken1Balance
+  pair.reserveToken0 = pairToken0Balance
+  pair.token1Price = convertTokenToDecimal(event.params.newprice, token1.decimals)
+  if (pair.token1Price.gt(ZERO_BD)) {
+    pair.token0Price = ONE_BD.div(pair.token1Price)
   }
-  brokerbot.priceXCHF = convertToChf(Address.fromString(token1.id), brokerbot.token1Price)
-  brokerbot.priceUSD = convertToUsd(token1.id, brokerbot.token1Price)
-  brokerbot.totalValueLockedXCHF = convertToChf(Address.fromString(token1.id), brokerbot.reserveToken1.plus(brokerbot.reserveToken0.times(brokerbot.token1Price)))
-  brokerbot.totalValueLockedUSD = convertToUsd(token1.id, brokerbot.reserveToken1.plus(brokerbot.reserveToken0.times(brokerbot.token1Price)))
+  pair.priceXCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
+  pair.priceUSD = convertToUsd(token1.id, pair.token1Price)
+  pair.totalValueLockedXCHF = convertToChf(Address.fromString(token1.id), pair.reserveToken1.plus(pair.reserveToken0.times(pair.token1Price)))
+  pair.totalValueLockedUSD = convertToUsd(token1.id, pair.reserveToken1.plus(pair.reserveToken0.times(pair.token1Price)))
   if (event.params.amount > ZERO_BI) {
-    brokerbot.totalRaisedXCHF = brokerbot.totalRaisedXCHF.plus(amountXCHF)
-    brokerbot.totalRaisedUSD = brokerbot.totalRaisedUSD.plus(amountUSD)
+    pair.totalRaisedXCHF = pair.totalRaisedXCHF.plus(amountXCHF)
+    pair.totalRaisedUSD = pair.totalRaisedUSD.plus(amountUSD)
   } else {
-    brokerbot.totalRaisedXCHF = brokerbot.totalRaisedXCHF.minus(amountXCHF)
-    brokerbot.totalRaisedUSD = brokerbot.totalRaisedUSD.minus(amountUSD)
+    pair.totalRaisedXCHF = pair.totalRaisedXCHF.minus(amountXCHF)
+    pair.totalRaisedUSD = pair.totalRaisedUSD.minus(amountUSD)
   }
-  brokerbot.liquidityXCHF = convertToChf(Address.fromString(token1.id), brokerbot.reserveToken1)
-  brokerbot.liquidityUSD = convertToUsd(token1.id, brokerbot.reserveToken1)
+  pair.liquidityXCHF = convertToChf(Address.fromString(token1.id), pair.reserveToken1)
+  pair.liquidityUSD = convertToUsd(token1.id, pair.reserveToken1)
 
   // update token1 global volume and token liquidity stats
   token1.tradeVolume = token1.tradeVolume.plus(amountToken1)
   token1.tradeVolumeXCHF = token1.tradeVolumeXCHF.plus(amountXCHF)
   token1.tradeVolumeUSD = token1.tradeVolumeUSD.plus(amountUSD)
-  token1.totalValueLocked = token1.totalValueLocked.plus(brokerbotToken1Balance)
+  token1.totalValueLocked = token1.totalValueLocked.plus(pairToken1Balance)
   token1.totalValueLockedXCHF = convertToChf(Address.fromString(token1.id), token1.totalValueLocked)
   token1.totalValueLockedUSD = convertToUsd(token1.id, token1.totalValueLocked)
   token1.totalSupply = fetchTokenTotalSupply(event.params.base)
@@ -144,9 +146,9 @@ export function handleTrade(event: Trade): void {
   token0.tradeVolume = token0.tradeVolume.plus(amountToken0)
   token0.tradeVolumeXCHF = token0.tradeVolumeXCHF.plus(amountXCHF)
   token0.tradeVolumeUSD = token0.tradeVolumeUSD.plus(amountUSD)
-  token0.totalValueLocked = token0.totalValueLocked.plus(brokerbotToken0Balance)
-  token0.totalValueLockedXCHF = convertToChf(Address.fromString(token1.id), token0.totalValueLocked.times(brokerbot.token1Price))
-  token0.totalValueLockedUSD = convertToUsd(token1.id, token0.totalValueLocked.times(brokerbot.token1Price))
+  token0.totalValueLocked = token0.totalValueLocked.plus(pairToken0Balance)
+  token0.totalValueLockedXCHF = convertToChf(Address.fromString(token1.id), token0.totalValueLocked.times(pair.token1Price))
+  token0.totalValueLockedUSD = convertToUsd(token1.id, token0.totalValueLocked.times(pair.token1Price))
   if (event.params.amount > ZERO_BI) {
     token0.totalRaisedXCHF = token0.totalRaisedXCHF.plus(amountXCHF)
     token0.totalRaisedUSD = token0.totalRaisedUSD.plus(amountUSD)
@@ -154,11 +156,11 @@ export function handleTrade(event: Trade): void {
     token0.totalRaisedXCHF = token0.totalRaisedXCHF.minus(amountXCHF)
     token0.totalRaisedUSD = token0.totalRaisedUSD.minus(amountUSD)
   }
-  token0.liquidityXCHF = brokerbot.liquidityXCHF
-  token0.liquidityUSD = brokerbot.liquidityUSD
+  token0.liquidityXCHF = pair.liquidityXCHF
+  token0.liquidityUSD = pair.liquidityUSD
   token0.totalSupply = fetchTokenTotalSupply(event.params.token)
-  token0.derivedXCHF = convertToChf(Address.fromString(token1.id), brokerbot.token1Price)
-  token0.derivedUSD = convertToUsd(token1.id, brokerbot.token1Price)
+  token0.derivedXCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
+  token0.derivedUSD = convertToUsd(token1.id, pair.token1Price)
   token0.totalShares = fetchTokenTotalShares(event.params.token)
   if(token0.totalShares !== null) {
     token0.marketCap = token0.derivedXCHF.times(token0.totalShares!.toBigDecimal())
@@ -176,17 +178,17 @@ export function handleTrade(event: Trade): void {
   registry.txCount = registry.txCount.plus(ONE_BI)
   registry.totalVolumeXCHF = registry.totalVolumeXCHF.plus(amountToken1)
   registry.totalVolumeUSD = convertToUsd(token1.id, registry.totalVolumeXCHF)
-  registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.plus(brokerbot.totalValueLockedXCHF)
+  registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.plus(pair.totalValueLockedXCHF)
   registry.totalValueLockedUSD = convertToUsd(token1.id, registry.totalValueLockedXCHF)
-  registry.totalRaisedXCHF = registry.totalRaisedXCHF.plus(brokerbot.totalRaisedXCHF)
-  registry.totalRaisedUSD = registry.totalRaisedUSD.plus(brokerbot.totalRaisedUSD)
-  registry.liquidityXCHF = registry.liquidityXCHF.plus(brokerbot.liquidityXCHF)
-  registry.liquidityUSD = registry.liquidityUSD.plus(brokerbot.liquidityUSD)
+  registry.totalRaisedXCHF = registry.totalRaisedXCHF.plus(pair.totalRaisedXCHF)
+  registry.totalRaisedUSD = registry.totalRaisedUSD.plus(pair.totalRaisedUSD)
+  registry.liquidityXCHF = registry.liquidityXCHF.plus(pair.liquidityXCHF)
+  registry.liquidityUSD = registry.liquidityUSD.plus(pair.liquidityUSD)
   registry.lastUpdate = event.block.number
 
   // save entities
   registry.save()
-  brokerbot.save()
+  pair.save()
   token1.save()
   token0.save()
 
@@ -195,14 +197,16 @@ export function handleTrade(event: Trade): void {
     transaction = new Transaction(event.transaction.hash.toHexString())
     transaction.blockNumber = event.block.number
     transaction.timestamp = event.block.timestamp
+    transaction.swaps = []
   }
+  let swaps = transaction.swaps
   let swap = new SwapEvent(
     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
 
   // update swap event
   swap.transaction = transaction.id
-  swap.pair = brokerbot.id
+  swap.pair = pair.id
   swap.token0 = token0.id
   swap.token1 = token1.id
   swap.timestamp = transaction.timestamp
@@ -224,7 +228,8 @@ export function handleTrade(event: Trade): void {
   swap.save()
 
   // update the transaction
-  transaction.swap = swap.id
+  swaps!.push(swap.id)
+  transaction.swaps = swaps
   transaction.save()
 
   // interval data
@@ -241,34 +246,34 @@ export function handleTrade(event: Trade): void {
   updateTokenHourData(token1, event, swap)
 }
 
-// update brokerbot and token price if the price is manually changed in the brokerbot
+// update pair and token price if the price is manually changed in the pair
 export function handlePriceSet(event: PriceSet): void {
   const MARKET_ADDRESS = event.address.toHexString()
-  let brokerbot = Pair.load(MARKET_ADDRESS)
-  if (brokerbot != null) {
-    let token0 = Token.load(brokerbot.token0)
-    let token1 = Token.load(brokerbot.token1)
+  let pair = Pair.load(MARKET_ADDRESS)
+  if (pair != null) {
+    let token0 = Token.load(pair.token0)
+    let token1 = Token.load(pair.token1)
 
     if (token1 !== null && token0 !== null) {      
-      brokerbot.token1Price = convertTokenToDecimal(event.params.price, token1.decimals)
-      if (brokerbot.token1Price.gt(ZERO_BD)) {
-        brokerbot.token0Price = ONE_BD.div(brokerbot.token1Price)
+      pair.token1Price = convertTokenToDecimal(event.params.price, token1.decimals)
+      if (pair.token1Price.gt(ZERO_BD)) {
+        pair.token0Price = ONE_BD.div(pair.token1Price)
       }
-      brokerbot.priceXCHF = convertToChf(Address.fromString(token1.id), brokerbot.token1Price)
-      brokerbot.priceUSD = convertToUsd(token1.id, brokerbot.token1Price)
+      pair.priceXCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
+      pair.priceUSD = convertToUsd(token1.id, pair.token1Price)
 
-      token0.derivedXCHF = convertToChf(Address.fromString(token1.id), brokerbot.token1Price)
-      token0.derivedUSD = convertToUsd(token1.id, brokerbot.token1Price)
+      token0.derivedXCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
+      token0.derivedUSD = convertToUsd(token1.id, pair.token1Price)
       token0.totalShares = fetchTokenTotalShares(Address.fromString(token0.id))
       if(token0.totalShares !== null) {
         token0.marketCap = token0.derivedXCHF.times(token0.totalShares!.toBigDecimal())
       }   
-      let marketToken1Balance  = convertTokenToDecimal(fetchTokenBalance(Address.fromString(token1.id), Address.fromString(brokerbot.id)), token1.decimals)
-      let marketTokenBalance = convertTokenToDecimal(fetchTokenBalance(Address.fromString(token0.id), Address.fromString(brokerbot.id)), token0.decimals)
-      brokerbot.totalValueLockedXCHF = marketToken1Balance.plus(marketTokenBalance.times(brokerbot.token1Price))
-      brokerbot.totalValueLockedUSD = convertToUsd(token1.id, brokerbot.totalValueLockedXCHF)
+      let marketToken1Balance  = convertTokenToDecimal(fetchTokenBalance(Address.fromString(token1.id), Address.fromString(pair.id)), token1.decimals)
+      let marketTokenBalance = convertTokenToDecimal(fetchTokenBalance(Address.fromString(token0.id), Address.fromString(pair.id)), token0.decimals)
+      pair.totalValueLockedXCHF = marketToken1Balance.plus(marketTokenBalance.times(pair.token1Price))
+      pair.totalValueLockedUSD = convertToUsd(token1.id, pair.totalValueLockedXCHF)
 
-      brokerbot.save()
+      pair.save()
       token0.save()
     }
   }

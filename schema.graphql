@@ -1,8 +1,8 @@
 type Registry @entity {
   " registry address"
   id: ID!
-  " amount of pools created"
-  marketCount: BigInt!
+  " amount of pairs created"
+  pairCount: BigInt!
   " amount of tokens "
   tokenCount: BigInt!
   " amount of transactions all time"
@@ -116,6 +116,14 @@ type Pair @entity {
   " raised"
   totalRaisedXCHF: BigDecimal!
   totalRaisedUSD: BigDecimal!
+
+    # creation stats
+  createdAtTimestamp: BigInt!
+  createdAtBlockNumber: BigInt!
+
+    # derived fields
+  pairHourData: [PairHourData!]! @derivedFrom(field: "pair")
+  swaps: [Swap!]! @derivedFrom(field: "pair")
 }
 
 type Transaction @entity {
@@ -128,8 +136,7 @@ type Transaction @entity {
   " gas used during txn execution"
   gasUsed: BigInt!
   gasPrice: BigInt!
-  " derived values"
-  swap: Swap!
+  swaps: [Swap!]
 }
 
 type Swap @entity {
