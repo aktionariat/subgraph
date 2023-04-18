@@ -53,7 +53,7 @@ export function handleTrade(event: Trade): void {
     token1.decimals = fetchTokenDecimals(event.params.base)
 
     token1.derivedXCHF = ONE_BD
-    token1.derivedUSD = ONE_BD
+    token1.derivedUSD = convertToUsd(token1.id, token1.derivedXCHF);
     token1.tradeVolume = ZERO_BD
     token1.tradeVolumeUSD = ZERO_BD
     token1.tradeVolumeXCHF = ZERO_BD
@@ -134,6 +134,7 @@ export function handleTrade(event: Trade): void {
   pair.liquidityUSD = convertToUsd(token1.id, pair.reserveToken1)
 
   // update token1 global volume and token liquidity stats
+  token1.derivedUSD = convertToUsd(token1.id, token1.derivedXCHF);
   token1.tradeVolume = token1.tradeVolume.plus(amountToken1)
   token1.tradeVolumeXCHF = token1.tradeVolumeXCHF.plus(amountXCHF)
   token1.tradeVolumeUSD = token1.tradeVolumeUSD.plus(amountUSD)
@@ -262,6 +263,7 @@ export function handlePriceSet(event: PriceSet): void {
       pair.priceXCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
       pair.priceUSD = convertToUsd(token1.id, pair.token1Price)
 
+      token1.derivedUSD = convertToUsd(token1.id, token1.derivedXCHF);
       token0.derivedXCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
       token0.derivedUSD = convertToUsd(token1.id, pair.token1Price)
       token0.totalShares = fetchTokenTotalShares(Address.fromString(token0.id))

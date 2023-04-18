@@ -20,7 +20,7 @@ Optimism
 yarn prepare:optimism
 ```
 
-# deploy subgrah
+# deploy subgraph
 After the preparation the subgraph is deploy with
 
 Mainnet
