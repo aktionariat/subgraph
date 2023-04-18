@@ -59,6 +59,8 @@ export function handleTrade(event: Trade): void {
     token1.tradeVolumeXCHF = ZERO_BD
     token1.totalValueLocked = ZERO_BD
     token1.txCount = ZERO_BI
+    token1.firstTradeTimestamp = ZERO_BI
+    token1.firstTradeBlock = ZERO_BI
   }
 
   // load share token
@@ -82,6 +84,8 @@ export function handleTrade(event: Trade): void {
     token0.totalValueLockedUSD = ZERO_BD
     token0.txCount = ZERO_BI
     token0.firstTradePriceXCHF = ZERO_BD
+    token0.firstTradeTimestamp = ZERO_BI
+    token0.firstTradeBlock = ZERO_BI
 
     // if there is a new token means new market on the registry
     registry.tokenCount = registry.tokenCount.plus(ONE_BI)
@@ -169,6 +173,16 @@ export function handleTrade(event: Trade): void {
   // if token initial where given out with at price 0
   if (token0.firstTradePriceXCHF == ZERO_BD){
     token0.firstTradePriceXCHF = token0.derivedXCHF
+  }
+
+  // first trade init
+  if (token0.firstTradeTimestamp == ZERO_BI) {
+    token0.firstTradeTimestamp = event.block.timestamp
+    token0.firstTradeBlock = event.block.number
+  }
+  if (token1.firstTradeTimestamp == ZERO_BI) {
+    token1.firstTradeTimestamp = event.block.timestamp
+    token1.firstTradeBlock = event.block.number
   }
 
   // update txn counts

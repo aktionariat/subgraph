@@ -76,6 +76,9 @@ type Token @entity {
   marketCap: BigDecimal
   " first trade price in XCHF "
   firstTradePriceXCHF: BigDecimal!
+  " first trade timestamp and block"
+  firstTradeTimestamp: BigInt!
+  firstTradeBlock: BigInt!
 }
 
 type Pair @entity {
