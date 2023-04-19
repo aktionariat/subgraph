@@ -38,6 +38,8 @@ export function handleTrade(event: Trade): void {
     brokerbot.base = event.params.base.toHexString()
     brokerbot.token = event.params.token.toHexString()
     registry.marketCount = registry.marketCount.plus(ONE_BI)
+    brokerbot.createdAtTimestamp = event.block.timestamp
+    brokerbot.createdAtBlockNumber = event.block.number
   }
 
   // load the base currency
@@ -57,8 +59,6 @@ export function handleTrade(event: Trade): void {
     base.tradeVolumeXCHF = ZERO_BD
     base.totalValueLocked = ZERO_BD
     base.txCount = ZERO_BI
-    base.firstTradeTimestamp = ZERO_BI
-    base.firstTradeBlock = ZERO_BI
   }
 
   // load share token
@@ -82,8 +82,6 @@ export function handleTrade(event: Trade): void {
     token.totalValueLockedUSD = ZERO_BD
     token.txCount = ZERO_BI
     token.firstTradePriceXCHF = ZERO_BD
-    token.firstTradeTimestamp = ZERO_BI
-    token.firstTradeBlock = ZERO_BI
 
     // if there is a new token means new market on the registry
     registry.tokenCount = registry.tokenCount.plus(ONE_BI)

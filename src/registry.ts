@@ -27,7 +27,7 @@ export function handleOwnershipTransferred(event: OwnershipTransferred): void {
 }
 
 export function handleRegisterBrokerbot(event: RegisterBrokerbot): void {
-  const entities = getEntities(event.address, event.params.brokerbot, event.params.base, event.params.token)
+  const entities = getEntities(event)
   // save entities  
   entities.registry.save()
   entities.brokerbot.save()
