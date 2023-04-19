@@ -128,7 +128,7 @@ type Transaction @entity {
   gasUsed: BigInt!
   gasPrice: BigInt!
   " derived values"
-  swap: Swap!
+  swaps: [Swap!]
 }
 
 type Swap @entity {

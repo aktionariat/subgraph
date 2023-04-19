@@ -200,7 +200,9 @@ export function handleTrade(event: Trade): void {
     transaction = new Transaction(event.transaction.hash.toHexString())
     transaction.blockNumber = event.block.number
     transaction.timestamp = event.block.timestamp
+    transaction.swaps = []
   }
+  let swaps = transaction.swaps
   let swap = new SwapEvent(
     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
@@ -229,7 +231,8 @@ export function handleTrade(event: Trade): void {
   swap.save()
 
   // update the transaction
-  transaction.swap = swap.id
+  swaps!.push(swap.id)
+  transaction.swaps = swaps
   transaction.save()
 
   // interval data
