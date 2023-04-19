@@ -51,7 +51,7 @@ export function handleTrade(event: Trade): void {
     base.decimals = fetchTokenDecimals(event.params.base)
 
     base.derivedXCHF = ONE_BD
-    base.derivedUSD = ONE_BD
+    base.derivedUSD = convertToUsd(base.id, base.derivedXCHF);
     base.tradeVolume = ZERO_BD
     base.tradeVolumeUSD = ZERO_BD
     base.tradeVolumeXCHF = ZERO_BD
@@ -132,6 +132,7 @@ export function handleTrade(event: Trade): void {
   brokerbot.liquidityUSD = convertToUsd(base.id, brokerbot.reserveBase)
 
   // update base global volume and token liquidity stats
+  base.derivedUSD = convertToUsd(base.id, base.derivedXCHF);
   base.tradeVolume = base.tradeVolume.plus(amountBase)
   base.tradeVolumeXCHF = base.tradeVolumeXCHF.plus(amountXCHF)
   base.tradeVolumeUSD = base.tradeVolumeUSD.plus(amountUSD)
@@ -265,6 +266,7 @@ export function handlePriceSet(event: PriceSet): void {
       brokerbot.priceXCHF = convertToChf(Address.fromString(base.id), brokerbot.basePrice)
       brokerbot.priceUSD = convertToUsd(base.id, brokerbot.basePrice)
 
+      base.derivedUSD = convertToUsd(base.id, base.derivedXCHF)
       token.derivedXCHF = convertToChf(Address.fromString(base.id), brokerbot.basePrice)
       token.derivedUSD = convertToUsd(base.id, brokerbot.basePrice)
       token.totalShares = fetchTokenTotalShares(Address.fromString(token.id))
