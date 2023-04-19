@@ -38,6 +38,8 @@ export function handleTrade(event: Trade): void {
     brokerbot.base = event.params.base.toHexString()
     brokerbot.token = event.params.token.toHexString()
     registry.marketCount = registry.marketCount.plus(ONE_BI)
+    brokerbot.createdAtTimestamp = event.block.timestamp
+    brokerbot.createdAtBlockNumber = event.block.number
   }
 
   // load the base currency
@@ -172,6 +174,16 @@ export function handleTrade(event: Trade): void {
   // if token initial where given out with at price 0
   if (token.firstTradePriceXCHF == ZERO_BD){
     token.firstTradePriceXCHF = token.derivedXCHF
+  }
+
+  // first trade init
+  if (token.firstTradeTimestamp == ZERO_BI) {
+    token.firstTradeTimestamp = event.block.timestamp
+    token.firstTradeBlock = event.block.number
+  }
+  if (base.firstTradeTimestamp == ZERO_BI) {
+    base.firstTradeTimestamp = event.block.timestamp
+    base.firstTradeBlock = event.block.number
   }
 
   // update txn counts

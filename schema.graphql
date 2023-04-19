@@ -75,6 +75,12 @@ type Token @entity {
   marketCap: BigDecimal
   " first trade price in XCHF "
   firstTradePriceXCHF: BigDecimal!
+  " first trade timestamp and block"
+  firstTradeTimestamp: BigInt!
+  firstTradeBlock: BigInt!
+    # derived fields
+  tokenHourData: [TokenHourData!]! @derivedFrom(field: "token")
+  swaps: [Swap!]! @derivedFrom(field: "token")
 }
 
 type Brokerbot @entity {
@@ -115,6 +121,14 @@ type Brokerbot @entity {
   " raised"
   totalRaisedXCHF: BigDecimal!
   totalRaisedUSD: BigDecimal!
+
+      # creation stats
+  createdAtTimestamp: BigInt!
+  createdAtBlockNumber: BigInt!
+
+    # derived fields
+  brokerbotHourData: [BrokerbotHourData!]! @derivedFrom(field: "brokerbot")
+  swaps: [Swap!]! @derivedFrom(field: "brokerbot")
 }
 
 type Transaction @entity {

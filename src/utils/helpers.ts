@@ -17,6 +17,7 @@ import { Brokerbot as BrokerbotTemplate } from "../../generated/templates"
 import * as constants from "./common/constants";
 import { CustomPriceType } from "./common/types";
 import { getPriceDai as getPriceDaiUniswap } from "./quoters/UniswapQuoter";
+import { RegisterBrokerbot } from '../../generated/BrokerbotRegistry/BrokerbotRegistry'
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
 export const OWNER_ADDRESS = '0xbddE35780e3986a47e54a580017d8213f0D2bB84'
@@ -251,13 +252,11 @@ export function getRegistry(registryAddress: string): Registry {
   return registry;
 }
 
-export function getEntities(
-  registryAddress: Address,
-  marketAddress: Address, 
-  baseAddress: Address, 
-  tokenAddress: Address
-  ): Entities {
-  
+export function getEntities(event: RegisterBrokerbot  ): Entities {
+  let registryAddress: Address = event.address
+  let marketAddress: Address = event.params.brokerbot 
+  let baseAddress: Address = event.params.base
+  let tokenAddress: Address =  event.params.token
 
   // load registry
   let registry = getRegistry(registryAddress.toHexString())
@@ -269,8 +268,9 @@ export function getEntities(
     brokerbot = new Brokerbot(marketAddress.toHexString())
     brokerbot.base = baseAddress.toHexString()
     brokerbot.token = tokenAddress.toHexString()
-
     registry.marketCount = registry.marketCount.plus(ONE_BI)
+    brokerbot.createdAtTimestamp = event.block.timestamp
+    brokerbot.createdAtBlockNumber = event.block.number
   }
 
   // load the base token
@@ -292,6 +292,8 @@ export function getEntities(
     base.totalValueLockedXCHF = ZERO_BD
     base.totalValueLockedUSD = ZERO_BD
     base.txCount = ZERO_BI
+    base.firstTradeTimestamp = ZERO_BI
+    base.firstTradeBlock = ZERO_BI
   }
 
   // load share token
@@ -315,6 +317,8 @@ export function getEntities(
     token.totalValueLockedUSD = ZERO_BD
     token.txCount = ZERO_BI
     token.firstTradePriceXCHF = ZERO_BD
+    token.firstTradeTimestamp = ZERO_BI
+    token.firstTradeBlock = ZERO_BI
 
     // if there is a new token means new market on the registry
     registry.tokenCount = registry.tokenCount.plus(ONE_BI)
