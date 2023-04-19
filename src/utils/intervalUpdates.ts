@@ -31,6 +31,7 @@ export function updateAktionariatWeekData(event: ethereum.Event, swap:Swap): Akt
     aktionariatWeekData.date = weekStartTimestamp
     aktionariatWeekData.volumeXCHF = constants.BIGDECIMAL_ZERO
     aktionariatWeekData.volumeUSD = constants.BIGDECIMAL_ZERO
+    aktionariatWeekData.txCount = constants.BIGINT_ZERO
   }
   aktionariatWeekData.totalValueLockedUSD = registry!.totalValueLockedUSD
   aktionariatWeekData.totalValueLockedXCHF = registry!.totalValueLockedXCHF
@@ -38,7 +39,7 @@ export function updateAktionariatWeekData(event: ethereum.Event, swap:Swap): Akt
   aktionariatWeekData.totalRaisedXCHF = registry!.totalRaisedXCHF
   aktionariatWeekData.liquidityXCHF = registry!.liquidityXCHF
   aktionariatWeekData.liquidityUSD = registry!.liquidityUSD
-  aktionariatWeekData.txCount = registry!.txCount
+  aktionariatWeekData.txCount = aktionariatWeekData.txCount.plus(constants.BIGINT_ONE)
   // update volume metrics
   aktionariatWeekData.volumeXCHF = aktionariatWeekData.volumeXCHF.plus(swap.amountXCHF)
   aktionariatWeekData.volumeUSD = aktionariatWeekData.volumeUSD.plus(swap.amountUSD)
@@ -57,6 +58,7 @@ export function updateAktionariatDayData(event: ethereum.Event, swap:Swap): Akti
     aktionariatDayData.date = dayStartTimestamp
     aktionariatDayData.volumeXCHF = constants.BIGDECIMAL_ZERO
     aktionariatDayData.volumeUSD = constants.BIGDECIMAL_ZERO
+    aktionariatDayData.txCount = constants.BIGINT_ZERO
   }
   aktionariatDayData.totalValueLockedUSD = registry!.totalValueLockedUSD
   aktionariatDayData.totalValueLockedXCHF = registry!.totalValueLockedXCHF
@@ -64,7 +66,7 @@ export function updateAktionariatDayData(event: ethereum.Event, swap:Swap): Akti
   aktionariatDayData.totalRaisedXCHF = registry!.totalRaisedXCHF
   aktionariatDayData.liquidityXCHF = registry!.liquidityXCHF
   aktionariatDayData.liquidityUSD = registry!.liquidityUSD
-  aktionariatDayData.txCount = registry!.txCount
+  aktionariatDayData.txCount = aktionariatDayData.txCount.plus(constants.BIGINT_ONE)
   // update volume metrics
   aktionariatDayData.volumeXCHF = aktionariatDayData.volumeXCHF.plus(swap.amountXCHF)
   aktionariatDayData.volumeUSD = aktionariatDayData.volumeUSD.plus(swap.amountUSD)
