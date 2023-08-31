@@ -119,7 +119,8 @@ export function updateBrokerbotWeekData(event: ethereum.Event, swap:Swap): Broke
     brokerbotWeekData.totalValueLockedXCHF = brokerbot.totalValueLockedXCHF
     brokerbotWeekData.liquidityUSD = brokerbot.liquidityUSD
     brokerbotWeekData.liquidityXCHF = brokerbot.liquidityXCHF
-    brokerbotWeekData.txCount = brokerbotWeekData.txCount.plus(constants.BIGINT_ONE)
+    if (swap.amountXCHF > constants.BIGDECIMAL_ZERO)
+      brokerbotWeekData.txCount = brokerbotWeekData.txCount.plus(constants.BIGINT_ONE)
     // update volume metrics
     brokerbotWeekData.volumeBase = brokerbotWeekData.volumeBase.plus(swap.amountBase)
     brokerbotWeekData.volumeToken = brokerbotWeekData.volumeToken.plus(swap.amountToken)
@@ -174,7 +175,8 @@ export function updateBrokerbotDayData(event: ethereum.Event, swap:Swap): Broker
     brokerbotDayData.totalValueLockedXCHF = brokerbot.totalValueLockedXCHF
     brokerbotDayData.liquidityXCHF = brokerbot.liquidityXCHF
     brokerbotDayData.liquidityUSD = brokerbot.liquidityUSD
-    brokerbotDayData.txCount = brokerbotDayData.txCount.plus(constants.BIGINT_ONE)
+    if (swap.amountXCHF > constants.BIGDECIMAL_ZERO)
+      brokerbotDayData.txCount = brokerbotDayData.txCount.plus(constants.BIGINT_ONE)
     // update volume metrics
     brokerbotDayData.volumeBase = brokerbotDayData.volumeBase.plus(swap.amountBase)
     brokerbotDayData.volumeToken = brokerbotDayData.volumeToken.plus(swap.amountToken)
@@ -230,7 +232,8 @@ export function updateBrokerbotHourData(event: ethereum.Event, swap:Swap): Broke
     brokerbotHourData.totalValueLockedXCHF = brokerbot.totalValueLockedXCHF
     brokerbotHourData.liquidityXCHF = brokerbot.liquidityXCHF
     brokerbotHourData.liquidityUSD = brokerbot.liquidityUSD
-    brokerbotHourData.txCount = brokerbotHourData.txCount.plus(constants.BIGINT_ONE)
+    if (swap.amountXCHF > constants.BIGDECIMAL_ZERO)
+      brokerbotHourData.txCount = brokerbotHourData.txCount.plus(constants.BIGINT_ONE)
     // update volume metrics  
     brokerbotHourData.volumeBase = brokerbotHourData.volumeBase.plus(swap.amountBase)
     brokerbotHourData.volumeToken = brokerbotHourData.volumeToken.plus(swap.amountToken)
