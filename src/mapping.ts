@@ -289,9 +289,24 @@ export function handlePriceSet(event: PriceSet): void {
       let marketTokenBalance = convertTokenToDecimal(fetchTokenBalance(Address.fromString(token.id), Address.fromString(brokerbot.id)), token.decimals)
       brokerbot.totalValueLockedXCHF = marketBaseBalance.plus(marketTokenBalance.times(brokerbot.basePrice))
       brokerbot.totalValueLockedUSD = convertToUsd(base.id, brokerbot.totalValueLockedXCHF)
+      token.totalValueLocked = brokerbot.totalValueLockedXCHF.div(brokerbot.basePrice);
+      token.totalValueLockedXCHF = brokerbot.totalValueLockedXCHF
+      token.totalValueLockedUSD = brokerbot.totalValueLockedUSD
 
       brokerbot.save()
       token.save()
+
+      // update interval data
+      let swap = new SwapEvent(
+        event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+      )
+      swap.amountXCHF = ZERO_BD
+      swap.amountUSD = ZERO_BD
+      swap.amountToken = ZERO_BD
+      swap.amountBase = ZERO_BD
+      updateTokenWeekData(token, event, swap)
+      updateTokenDayData(token, event, swap)
+      updateTokenHourData(token, event, swap)
     }
   }
 }
