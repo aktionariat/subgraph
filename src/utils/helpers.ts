@@ -20,13 +20,12 @@ import { getPriceDai as getPriceDaiUniswap } from "./quoters/UniswapQuoter";
 import { RegisterBrokerbot } from '../../generated/BrokerbotRegistry/BrokerbotRegistry'
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
-export const OWNER_ADDRESS = '0xbddE35780e3986a47e54a580017d8213f0D2bB84'
 export const REGISTRY_ADDRESS = Address.fromString(constants.BROKERBOT_REGISTRY_CONTRACT_ADDRESSES_MAP.get(dataSource.network())!.toHexString())
 export const CHAINLINK_FEED_REGISTRY_ADDRESS:Address = Address.fromString("0x449d117117838fFA61263B61dA6301AA2a88B13A")
 //export const CHAINLINK_FEED_REGISTRY_ADDRESS:Address = Address.fromString("0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf")
 export const CHAIN_LINK_USD_ADDRESS = Address.fromString("0x0000000000000000000000000000000000000348")
-export const CHAIN_LINK_CHF_ADDRESS = new Address(756)
-export const XCHF_ADDRESS = Address.fromString("0xB4272071eCAdd69d933AdcD19cA99fe80664fc08")
+// export const CHAIN_LINK_CHF_ADDRESS = new Address(756) // not in use 
+export const XCHF_ADDRESS = Address.fromString("0xB4272071eCAdd69d933AdcD19cA99fe80664fc08") // only used for mainnet
 
 
 export let ZERO_BI = BigInt.fromI32(0)

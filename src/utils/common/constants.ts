@@ -1,5 +1,6 @@
 import * as MAINNET from "../config/mainnet";
 import * as OPTIMISM from "../config/optimism"
+import * as POLYGON from "../config/polygon";
 
 import { Address, BigDecimal, BigInt, TypedMap } from "@graphprotocol/graph-ts";
 import { UniswapPair__getReservesResult } from "../../../generated/templates/Brokerbot/UniswapPair";
@@ -53,6 +54,10 @@ BROKERBOT_REGISTRY_CONTRACT_ADDRESSES_MAP.set(
   OPTIMISM.NETWORK_STRING,
   OPTIMISM.BROKERBOT_REGISTRY_CONTRACT_ADDRESSES
 );
+BROKERBOT_REGISTRY_CONTRACT_ADDRESSES_MAP.set(
+  POLYGON.NETWORK_STRING,
+  POLYGON.BROKERBOT_REGISTRY_CONTRACT_ADDRESSES
+);
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////// UNISWAP CONTRACT ////////////////////////////
@@ -72,6 +77,10 @@ UNISWAP_QUOTER_CONTRACT_ADDRESSES_MAP.set(
 UNISWAP_QUOTER_CONTRACT_ADDRESSES_MAP.set(
   OPTIMISM.NETWORK_STRING,
   OPTIMISM.UNISWAP_QUOTER_CONTRACT_ADDRESSES
+);
+UNISWAP_QUOTER_CONTRACT_ADDRESSES_MAP.set(
+  POLYGON.NETWORK_STRING,
+  POLYGON.UNISWAP_QUOTER_CONTRACT_ADDRESSES
 );
 
 ///////////////////////////////////////////////////////////////////////////
@@ -94,3 +103,4 @@ export const WHITELIST_TOKENS_MAP = new TypedMap<
 >();
 WHITELIST_TOKENS_MAP.set(MAINNET.NETWORK_STRING, MAINNET.WHITELIST_TOKENS);
 WHITELIST_TOKENS_MAP.set(OPTIMISM.NETWORK_STRING, OPTIMISM.WHITELIST_TOKENS);
+WHITELIST_TOKENS_MAP.set(POLYGON.NETWORK_STRING, POLYGON.WHITELIST_TOKENS);
