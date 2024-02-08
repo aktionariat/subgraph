@@ -20,6 +20,13 @@ Optimism
 yarn prepare:optimism
 ```
 
+Polygon
+```
+yarn prepare:polygon
+```
+
+
+
 # Deploy Subgraph
 To get an access token of the Graph hosted service read their doc here https://thegraph.com/docs/en/deploying/deploying-a-subgraph-to-hosted/
 
@@ -32,4 +39,9 @@ yarn deploy
 Optimism
 ```
 yarn deploy-op
+```
+
+Polygon
+```
+yarn deploy-polygon
 ```
