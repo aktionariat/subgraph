@@ -3,12 +3,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: Brokerbot 
-    network: matic
+    name: Brokerbot #DAKS
+    network: mainnet
     source:
-      address: "0x56217a14a65bcc6a3b5e547cf7e9301c8d602787"
+      address: "0xbddE35780e3986a47e54a580017d8213f0D2bB84"
       abi: Brokerbot
-      startBlock: 52628415
+      startBlock: 12544440
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -29,24 +29,21 @@ dataSources:
           file: ./abis/ERC20SymbolBytes.json
         - name: ERC20NameBytes
           file: ./abis/ERC20NameBytes.json
-        # Uniswap Contracts
-        - name: UniswapFactory
-          file: ./abis/Prices/Uniswap/Factory.json
-        - name: UniswapPair
-          file: ./abis/Prices/Uniswap/Pair.json
-        - name: UniswapQuoter
-          file: ./abis/Prices/Uniswap/Quoter.json
+        - name: ChainLink
+          file: ./abis/ChainLink.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
       eventHandlers:
         - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
           handler: handleTrade
       file: ./src/mapping.ts
   - kind: ethereum
-    name: Brokerbot1
-    network: matic
+    name: Brokerbot1 #TBOS
+    network: mainnet
     source:
-      address: "0x1D4b45FF4f542E6C08E3BB1806518a209e553336" #operal
+      address: "0xCf1f5270916E41f5cf4221F68798438c3E5404E6"
       abi: Brokerbot
-      startBlock: 56198589
+      startBlock: 13050778
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -67,24 +64,336 @@ dataSources:
           file: ./abis/ERC20SymbolBytes.json
         - name: ERC20NameBytes
           file: ./abis/ERC20NameBytes.json
-        # Uniswap Contracts
-        - name: UniswapFactory
-          file: ./abis/Prices/Uniswap/Factory.json
-        - name: UniswapPair
-          file: ./abis/Prices/Uniswap/Pair.json
-        - name: UniswapQuoter
-          file: ./abis/Prices/Uniswap/Quoter.json
+        - name: ChainLink
+          file: ./abis/ChainLink.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
       eventHandlers:
         - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
           handler: handleTrade
       file: ./src/mapping.ts
-  - kind: ethereum/contract
+  - kind: ethereum
+    name: Brokerbot2 # quitt old
+    network: mainnet
+    source:
+      address: "0x51C6EF4D909Cd3933E8B73734AF9Ee87AA745771"
+      abi: Brokerbot
+      startBlock: 12589859
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Market
+        - Token
+      abis:
+        - name: Brokerbot
+          file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: ChainLink
+          file: ./abis/ChainLink.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
+      eventHandlers:
+        - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
+          handler: handleTrade
+      file: ./src/mapping.ts
+  - kind: ethereum
+    name: Brokerbot3 #DGCS
+    network: mainnet
+    source:
+      address: "0xFA1A2e457484aD9b991c035e718ee23d45049428"
+      abi: Brokerbot
+      startBlock: 12650521
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Market
+        - Token
+      abis:
+        - name: Brokerbot
+          file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: ChainLink
+          file: ./abis/ChainLink.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
+      eventHandlers:
+        - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
+          handler: handleTrade
+      file: ./src/mapping.ts
+  - kind: ethereum
+    name: Brokerbot4 #BOSS
+    network: mainnet
+    source:
+      address: "0xe634160eeb1e5667621b4fe328E89D9Cb905235E"
+      abi: Brokerbot
+      startBlock: 12813303 
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Market
+        - Token
+      abis:
+        - name: Brokerbot
+          file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: ChainLink
+          file: ./abis/ChainLink.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
+      eventHandlers:
+        - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
+          handler: handleTrade
+      file: ./src/mapping.ts
+  - kind: ethereum
+    name: Brokerbot5 #Swissshore
+    network: mainnet
+    source:
+      address: "0x82B26de8227E23014c6F29f7fBbc20EE8BE794A9"
+      abi: Brokerbot
+      startBlock: 14202384 
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Market
+        - Token
+      abis:
+        - name: Brokerbot
+          file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: ChainLink
+          file: ./abis/ChainLink.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
+      eventHandlers:
+        - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
+          handler: handleTrade
+      file: ./src/mapping.ts
+  - kind: ethereum
+    name: Brokerbot6 #VEDA
+    network: mainnet
+    source:
+      address: "0x2ffd9AD26E0440970B74e02116102080D3e0Acb9"
+      abi: Brokerbot
+      startBlock: 13183835 
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Market
+        - Token
+      abis:
+        - name: Brokerbot
+          file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: ChainLink
+          file: ./abis/ChainLink.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
+      eventHandlers:
+        - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
+          handler: handleTrade
+      file: ./src/mapping.ts
+  - kind: ethereum
+    name: Brokerbot7 #Aydea
+    network: mainnet
+    source:
+      address: "0xbe2057bAC4157Bba00759f61dacB08A64F703C2d"
+      abi: Brokerbot
+      startBlock: 14202564 
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Market
+        - Token
+      abis:
+        - name: Brokerbot
+          file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: ChainLink
+          file: ./abis/ChainLink.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
+      eventHandlers:
+        - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
+          handler: handleTrade
+      file: ./src/mapping.ts
+  - kind: ethereum
+    name: Brokerbot8 #quitt new
+    network: mainnet
+    source:
+      address: "0x1abD8b5194D733691D64c3F898300f88Ba0035d5"
+      abi: Brokerbot
+      startBlock: 14412542
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Market
+        - Token
+      abis:
+        - name: Brokerbot
+          file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: ChainLink
+          file: ./abis/ChainLink.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
+      eventHandlers:
+        - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
+          handler: handleTrade
+      file: ./src/mapping.ts
+  - kind: ethereum
+    name: Brokerbot9 #daks new
+    network: mainnet
+    source:
+      address: "0x2f2C3Cf0b2D6F4F6CD5F57665Ae629eee813350B"
+      abi: Brokerbot
+      startBlock: 19618431
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Market
+        - Token
+      abis:
+        - name: Brokerbot
+          file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: ChainLink
+          file: ./abis/ChainLink.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
+      eventHandlers:
+        - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
+          handler: handleTrade
+      file: ./src/mapping.ts
+  - kind: ethereum
+    name: Brokerbot10 #boss new
+    network: mainnet
+    source:
+      address: "0x3E73d3Fc22A8637b2c16790Aa2c0E2d552d44E69"
+      abi: Brokerbot
+      startBlock: 19688881
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Market
+        - Token
+      abis:
+        - name: Brokerbot
+          file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: ChainLink
+          file: ./abis/ChainLink.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
+      eventHandlers:
+        - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
+          handler: handleTrade
+      file: ./src/mapping.ts
+  - kind: ethereum
     name: BrokerbotRegistry
-    network: matic
+    network: mainnet
     source: 
-      address: "0x6548fad069f2eda512a658c17606eed81095c93d"
+      address: "0xcB3e482df38d62E73A7aE0E15a2605caDcc5aE98"
       abi: BrokerbotRegistry
-      startBlock: 53269607
+      startBlock: 14830096
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -93,7 +402,7 @@ dataSources:
         - Registry
         - Brokerbot
         - Token
-      abis:
+      abis:        
         - name: Brokerbot
           file: ./abis/Brokerbot.json
         - name: BrokerbotRegistry
@@ -108,6 +417,10 @@ dataSources:
           file: ./abis/ERC20SymbolBytes.json
         - name: ERC20NameBytes
           file: ./abis/ERC20NameBytes.json
+        - name: ChainLink
+          file: ./abis/ChainLink.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
         # Uniswap Contracts
         - name: UniswapFactory
           file: ./abis/Prices/Uniswap/Factory.json
@@ -124,9 +437,9 @@ dataSources:
           handler: handleSyncBrokerbot
       file: ./src/registry.ts
 templates:
-  - kind: ethereum/contract
+  - kind: ethereum
     name: Brokerbot
-    network: matic
+    network: mainnet
     source:
       abi: Brokerbot
     mapping:
@@ -160,6 +473,8 @@ templates:
           file: ./abis/ERC20SymbolBytes.json
         - name: ERC20NameBytes
           file: ./abis/ERC20NameBytes.json
+        - name: AggregatorV3Interface
+          file: ./abis/AggregatorV3Interface.json
         # Uniswap Contracts
         - name: UniswapFactory
           file: ./abis/Prices/Uniswap/Factory.json
