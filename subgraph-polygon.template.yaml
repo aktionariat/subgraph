@@ -40,6 +40,44 @@ dataSources:
         - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
           handler: handleTrade
       file: ./src/mapping.ts
+  - kind: ethereum
+    name: Brokerbot1
+    network: matic
+    source:
+      address: "{{address2}}" #operal
+      abi: Brokerbot
+      startBlock: {{startBlock2}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Market
+        - Token
+      abis:
+        - name: Brokerbot
+          file: ./abis/Brokerbot.json
+        - name: Shares
+          file: ./abis/Shares.json
+        - name: ERC20Draggable
+          file: ./abis/ERC20Draggable.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        # Uniswap Contracts
+        - name: UniswapFactory
+          file: ./abis/Prices/Uniswap/Factory.json
+        - name: UniswapPair
+          file: ./abis/Prices/Uniswap/Pair.json
+        - name: UniswapQuoter
+          file: ./abis/Prices/Uniswap/Quoter.json
+      eventHandlers:
+        - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
+          handler: handleTrade
+      file: ./src/mapping.ts
   - kind: ethereum/contract
     name: BrokerbotRegistry
     network: matic
