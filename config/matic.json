@@ -1,4 +1,6 @@
 {
   "address1": "0x56217a14a65bcc6a3b5e547cf7e9301c8d602787",
-  "startBlock1": 52628415
+  "startBlock1": 52628415,
+  "address2": "0x1D4b45FF4f542E6C08E3BB1806518a209e553336",
+  "startBlock2": 56198589
 }

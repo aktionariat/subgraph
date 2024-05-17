@@ -15,7 +15,7 @@
     "prepare:polygon": "mustache config/matic.json subgraph-polygon.template.yaml > subgraph.yaml"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.67.4",
+    "@graphprotocol/graph-cli": "0.69.0",
     "@graphprotocol/graph-ts": "0.32.0",
     "mustache": "^4.2.0"
   }
