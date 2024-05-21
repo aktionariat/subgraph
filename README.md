@@ -1,6 +1,16 @@
 # Subgraph
 Subgraph of the brokerbot/market data
 
+# Prequesits
+
+authenticate to the graph studio
+
+```
+graph auth --studio <authkey>
+```
+
+The authkey (or the full command to copy) you find on the right side when you visit https://thegraph.com/studio/subgraph/<subgraph-name> and connect with the owner wallet. 
+
 # Upgrade schema
 
 If the the schema is updated the generated files needs to be updated

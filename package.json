@@ -4,9 +4,9 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ aktionariat/brokerbot",
-    "deploy-op": "graph deploy --node https://api.thegraph.com/deploy/ aktionariat/brokerbot-optimism",
-    "deploy-polygon": "graph deploy --product hosted-service aktionariat/brokerbot-polygon",
+    "deploy": "graph deploy --studio brokerbot",
+    "deploy-op": "graph deploy --studio brokerbot-optimism",
+    "deploy-polygon": "graph deploy --studio brokerbot-polygon",
     "create-local": "graph create --node http://localhost:8020/ aktionariat/brokerbot",
     "remove-local": "graph remove --node http://localhost:8020/ aktionariat/brokerbot",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 aktionariat/brokerbot",
