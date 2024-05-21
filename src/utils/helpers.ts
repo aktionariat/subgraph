@@ -26,6 +26,7 @@ export const CHAINLINK_FEED_REGISTRY_ADDRESS:Address = Address.fromString("0x449
 export const CHAIN_LINK_USD_ADDRESS = Address.fromString("0x0000000000000000000000000000000000000348")
 // export const CHAIN_LINK_CHF_ADDRESS = new Address(756) // not in use 
 export const XCHF_ADDRESS = Address.fromString("0xB4272071eCAdd69d933AdcD19cA99fe80664fc08") // only used for mainnet
+export const ZCHF_ADDRESS = Address.fromString("0xB58E61C3098d85632Df34EecfB899A1Ed80921cB") // only used for mainnet
 
 
 export let ZERO_BI = BigInt.fromI32(0)
@@ -208,7 +209,8 @@ export function convertToUsd(tokenAddress: string, value: BigDecimal): BigDecima
   // mainnet gets price thru chainlink feed
   if (network == 'mainnet') {
     let priceFeedRegistryContract = AggregatorV3Interface.bind(CHAINLINK_FEED_REGISTRY_ADDRESS)
-    if (tokenAddress == XCHF_ADDRESS.toHexString()) {
+    if (tokenAddress == XCHF_ADDRESS.toHexString()
+        || tokenAddress == ZCHF_ADDRESS.toHexString()) {
       // tokenAddress = CHAIN_LINK_CHF_ADDRESS
       // Returns the latest price of chf/usd pair from chainlink with 8 decimals
       let result = priceFeedRegistryContract.try_latestRoundData()
@@ -230,7 +232,8 @@ export function convertToUsd(tokenAddress: string, value: BigDecimal): BigDecima
 
 export function convertToChf(tokenAddress: Address, value: BigDecimal): BigDecimal {
   let network = dataSource.network();
-  if (tokenAddress == constants.WHITELIST_TOKENS_MAP.get(network)!.get("XCHF")!) {
+  if (tokenAddress == constants.WHITELIST_TOKENS_MAP.get(network)!.get("XCHF")!
+    || tokenAddress == constants.WHITELIST_TOKENS_MAP.get(network)!.get("ZCHF")!) {
     return value
   } 
   // TODO: convert from other tokens

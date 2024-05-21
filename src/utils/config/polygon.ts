@@ -63,3 +63,7 @@ WHITELIST_TOKENS.set(
   "XCHF",
   Address.fromString("0x23a72dfa62cd95c08ee116a285ae4f05cbeccd18")
 );
+WHITELIST_TOKENS.set(
+  "ZCHF",
+  Address.fromString("0x02567e4b14b25549331fCEe2B56c647A8bAB16FD")
+);
