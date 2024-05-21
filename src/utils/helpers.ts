@@ -244,9 +244,9 @@ export function getRegistry(registryAddress: string): Registry {
     registry.pairCount = ZERO_BI
     registry.txCount = ZERO_BI
     registry.totalValueLockedUSD = ZERO_BD
-    registry.totalValueLockedXCHF = ZERO_BD
+    registry.totalValueLockedCHF = ZERO_BD
     registry.totalVolumeUSD = ZERO_BD
-    registry.totalVolumeXCHF = ZERO_BD
+    registry.totalvolumeCHF = ZERO_BD
   }
   return registry;
 }
@@ -283,13 +283,13 @@ export function getEntities(
     base.totalSupply = fetchTokenTotalSupply(baseAddress)
     base.decimals = fetchTokenDecimals(baseAddress)
 
-    base.derivedXCHF = ZERO_BD
+    base.derivedCHF = ZERO_BD
     base.derivedUSD = ZERO_BD
     base.tradeVolume = ZERO_BD
     base.tradeVolumeUSD = ZERO_BD
-    base.tradeVolumeXCHF = ZERO_BD
+    base.tradevolumeCHF = ZERO_BD
     base.totalValueLocked = ZERO_BD
-    base.totalValueLockedXCHF = ZERO_BD
+    base.totalValueLockedCHF = ZERO_BD
     base.totalValueLockedUSD = ZERO_BD
     base.txCount = ZERO_BI
   }
@@ -305,16 +305,16 @@ export function getEntities(
     token.decimals = fetchTokenDecimals(tokenAddress)
     token.totalShares = fetchTokenTotalShares(tokenAddress)
   
-    token.derivedXCHF = ZERO_BD
+    token.derivedCHF = ZERO_BD
     token.derivedUSD = ZERO_BD
     token.tradeVolume = ZERO_BD
     token.tradeVolumeUSD = ZERO_BD
-    token.tradeVolumeXCHF = ZERO_BD
+    token.tradevolumeCHF = ZERO_BD
     token.totalValueLocked = ZERO_BD
-    token.totalValueLockedXCHF = ZERO_BD
+    token.totalValueLockedCHF = ZERO_BD
     token.totalValueLockedUSD = ZERO_BD
     token.txCount = ZERO_BI
-    token.firstTradePriceXCHF = ZERO_BD
+    token.firstTradepriceCHF = ZERO_BD
 
     // if there is a new token means new market on the registry
     registry.tokenCount = registry.tokenCount.plus(ONE_BI)

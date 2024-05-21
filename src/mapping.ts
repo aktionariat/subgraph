@@ -52,11 +52,11 @@ export function handleTrade(event: Trade): void {
     token1.totalSupply = fetchTokenTotalSupply(event.params.base)
     token1.decimals = fetchTokenDecimals(event.params.base)
 
-    token1.derivedXCHF = ONE_BD
-    token1.derivedUSD = convertToUsd(token1.id, token1.derivedXCHF);
+    token1.derivedCHF = ONE_BD
+    token1.derivedUSD = convertToUsd(token1.id, token1.derivedCHF);
     token1.tradeVolume = ZERO_BD
     token1.tradeVolumeUSD = ZERO_BD
-    token1.tradeVolumeXCHF = ZERO_BD
+    token1.tradevolumeCHF = ZERO_BD
     token1.totalValueLocked = ZERO_BD
     token1.txCount = ZERO_BI
     token1.firstTradeTimestamp = ZERO_BI
@@ -74,16 +74,16 @@ export function handleTrade(event: Trade): void {
     token0.decimals = fetchTokenDecimals(event.params.token)
     token0.totalShares = fetchTokenTotalShares(event.params.token)
 
-    token0.derivedXCHF = ZERO_BD
+    token0.derivedCHF = ZERO_BD
     token0.derivedUSD = ZERO_BD
     token0.tradeVolume = ZERO_BD
     token0.tradeVolumeUSD = ZERO_BD
-    token0.tradeVolumeXCHF = ZERO_BD
+    token0.tradevolumeCHF = ZERO_BD
     token0.totalValueLocked = ZERO_BD
-    token0.totalValueLockedXCHF = ZERO_BD
+    token0.totalValueLockedCHF = ZERO_BD
     token0.totalValueLockedUSD = ZERO_BD
     token0.txCount = ZERO_BI
-    token0.firstTradePriceXCHF = ZERO_BD
+    token0.firstTradepriceCHF = ZERO_BD
     token0.firstTradeTimestamp = ZERO_BI
     token0.firstTradeBlock = ZERO_BI
 
@@ -99,12 +99,12 @@ export function handleTrade(event: Trade): void {
   // reset total liquidity amounts
   token1.totalValueLocked = token1.totalValueLocked.minus(pair.reserveToken1)
   token0.totalValueLocked = token0.totalValueLocked.minus(pair.reserveToken0)
-  registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.minus(pair.totalValueLockedXCHF)
+  registry.totalValueLockedCHF = registry.totalValueLockedCHF.minus(pair.totalValueLockedCHF)
   registry.totalValueLockedUSD = registry.totalValueLockedUSD.minus(pair.totalValueLockedUSD)
-  registry.totalRaisedXCHF = registry.totalRaisedXCHF.minus(pair.totalRaisedXCHF)
+  registry.totalRaisedCHF = registry.totalRaisedCHF.minus(pair.totalRaisedCHF)
   registry.totalRaisedUSD = registry.totalRaisedUSD.minus(pair.totalRaisedUSD)
   registry.liquidityUSD = registry.liquidityUSD.minus(pair.liquidityUSD)
-  registry.liquidityXCHF = registry.liquidityXCHF.minus(pair.liquidityXCHF)
+  registry.liquidityCHF = registry.liquidityCHF.minus(pair.liquidityCHF)
 
   // get current pair balance
   let pairToken1Balance  = convertTokenToDecimal(fetchTokenBalance(event.params.base, Address.fromString(pair.id)), token1.decimals)
@@ -115,7 +115,7 @@ export function handleTrade(event: Trade): void {
   pair.volumeToken1 = pair.volumeToken1.plus(amountToken1)
   pair.volumeToken0= pair.volumeToken0.plus(amountToken0)
   pair.volumeUSD = pair.volumeUSD.plus(amountUSD)
-  pair.volumeXCHF = pair.volumeXCHF.plus(amountXCHF)
+  pair.volumeCHF = pair.volumeCHF.plus(amountXCHF)
   pair.txCount = pair.txCount.plus(ONE_BI)
   pair.reserveToken1 = pairToken1Balance
   pair.reserveToken0 = pairToken0Balance
@@ -123,56 +123,56 @@ export function handleTrade(event: Trade): void {
   if (pair.token1Price.gt(ZERO_BD)) {
     pair.token0Price = ONE_BD.div(pair.token1Price)
   }
-  pair.priceXCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
+  pair.priceCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
   pair.priceUSD = convertToUsd(token1.id, pair.token1Price)
-  pair.totalValueLockedXCHF = convertToChf(Address.fromString(token1.id), pair.reserveToken1.plus(pair.reserveToken0.times(pair.token1Price)))
+  pair.totalValueLockedCHF = convertToChf(Address.fromString(token1.id), pair.reserveToken1.plus(pair.reserveToken0.times(pair.token1Price)))
   pair.totalValueLockedUSD = convertToUsd(token1.id, pair.reserveToken1.plus(pair.reserveToken0.times(pair.token1Price)))
   if (event.params.amount > ZERO_BI) {
-    pair.totalRaisedXCHF = pair.totalRaisedXCHF.plus(amountXCHF)
+    pair.totalRaisedCHF = pair.totalRaisedCHF.plus(amountXCHF)
     pair.totalRaisedUSD = pair.totalRaisedUSD.plus(amountUSD)
   } else {
-    pair.totalRaisedXCHF = pair.totalRaisedXCHF.minus(amountXCHF)
+    pair.totalRaisedCHF = pair.totalRaisedCHF.minus(amountXCHF)
     pair.totalRaisedUSD = pair.totalRaisedUSD.minus(amountUSD)
   }
-  pair.liquidityXCHF = convertToChf(Address.fromString(token1.id), pair.reserveToken1)
+  pair.liquidityCHF = convertToChf(Address.fromString(token1.id), pair.reserveToken1)
   pair.liquidityUSD = convertToUsd(token1.id, pair.reserveToken1)
 
   // update token1 global volume and token liquidity stats
-  token1.derivedUSD = convertToUsd(token1.id, token1.derivedXCHF);
+  token1.derivedUSD = convertToUsd(token1.id, token1.derivedCHF);
   token1.tradeVolume = token1.tradeVolume.plus(amountToken1)
-  token1.tradeVolumeXCHF = token1.tradeVolumeXCHF.plus(amountXCHF)
+  token1.tradevolumeCHF = token1.tradevolumeCHF.plus(amountXCHF)
   token1.tradeVolumeUSD = token1.tradeVolumeUSD.plus(amountUSD)
   token1.totalValueLocked = token1.totalValueLocked.plus(pairToken1Balance)
-  token1.totalValueLockedXCHF = convertToChf(Address.fromString(token1.id), token1.totalValueLocked)
+  token1.totalValueLockedCHF = convertToChf(Address.fromString(token1.id), token1.totalValueLocked)
   token1.totalValueLockedUSD = convertToUsd(token1.id, token1.totalValueLocked)
   token1.totalSupply = fetchTokenTotalSupply(event.params.base)
 
   // update token global volume and token liquidity stats
   token0.tradeVolume = token0.tradeVolume.plus(amountToken0)
-  token0.tradeVolumeXCHF = token0.tradeVolumeXCHF.plus(amountXCHF)
+  token0.tradevolumeCHF = token0.tradevolumeCHF.plus(amountXCHF)
   token0.tradeVolumeUSD = token0.tradeVolumeUSD.plus(amountUSD)
   token0.totalValueLocked = token0.totalValueLocked.plus(pairToken0Balance)
-  token0.totalValueLockedXCHF = convertToChf(Address.fromString(token1.id), token0.totalValueLocked.times(pair.token1Price))
+  token0.totalValueLockedCHF = convertToChf(Address.fromString(token1.id), token0.totalValueLocked.times(pair.token1Price))
   token0.totalValueLockedUSD = convertToUsd(token1.id, token0.totalValueLocked.times(pair.token1Price))
   if (event.params.amount > ZERO_BI) {
-    token0.totalRaisedXCHF = token0.totalRaisedXCHF.plus(amountXCHF)
+    token0.totalRaisedCHF = token0.totalRaisedCHF.plus(amountXCHF)
     token0.totalRaisedUSD = token0.totalRaisedUSD.plus(amountUSD)
   } else {
-    token0.totalRaisedXCHF = token0.totalRaisedXCHF.minus(amountXCHF)
+    token0.totalRaisedCHF = token0.totalRaisedCHF.minus(amountXCHF)
     token0.totalRaisedUSD = token0.totalRaisedUSD.minus(amountUSD)
   }
-  token0.liquidityXCHF = pair.liquidityXCHF
+  token0.liquidityCHF = pair.liquidityCHF
   token0.liquidityUSD = pair.liquidityUSD
   token0.totalSupply = fetchTokenTotalSupply(event.params.token)
-  token0.derivedXCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
+  token0.derivedCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
   token0.derivedUSD = convertToUsd(token1.id, pair.token1Price)
   token0.totalShares = fetchTokenTotalShares(event.params.token)
   if(token0.totalShares !== null) {
-    token0.marketCap = token0.derivedXCHF.times(token0.totalShares!.toBigDecimal())
+    token0.marketCap = token0.derivedCHF.times(token0.totalShares!.toBigDecimal())
   }
   // if token initial where given out with at price 0
-  if (token0.firstTradePriceXCHF == ZERO_BD){
-    token0.firstTradePriceXCHF = token0.derivedXCHF
+  if (token0.firstTradepriceCHF == ZERO_BD){
+    token0.firstTradepriceCHF = token0.derivedCHF
   }
 
   // first trade init
@@ -191,13 +191,13 @@ export function handleTrade(event: Trade): void {
   
   // update data of registry
   registry.txCount = registry.txCount.plus(ONE_BI)
-  registry.totalVolumeXCHF = registry.totalVolumeXCHF.plus(amountToken1)
-  registry.totalVolumeUSD = convertToUsd(token1.id, registry.totalVolumeXCHF)
-  registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.plus(pair.totalValueLockedXCHF)
-  registry.totalValueLockedUSD = convertToUsd(token1.id, registry.totalValueLockedXCHF)
-  registry.totalRaisedXCHF = registry.totalRaisedXCHF.plus(pair.totalRaisedXCHF)
+  registry.totalvolumeCHF = registry.totalvolumeCHF.plus(amountToken1)
+  registry.totalVolumeUSD = convertToUsd(token1.id, registry.totalvolumeCHF)
+  registry.totalValueLockedCHF = registry.totalValueLockedCHF.plus(pair.totalValueLockedCHF)
+  registry.totalValueLockedUSD = convertToUsd(token1.id, registry.totalValueLockedCHF)
+  registry.totalRaisedCHF = registry.totalRaisedCHF.plus(pair.totalRaisedCHF)
   registry.totalRaisedUSD = registry.totalRaisedUSD.plus(pair.totalRaisedUSD)
-  registry.liquidityXCHF = registry.liquidityXCHF.plus(pair.liquidityXCHF)
+  registry.liquidityCHF = registry.liquidityCHF.plus(pair.liquidityCHF)
   registry.liquidityUSD = registry.liquidityUSD.plus(pair.liquidityUSD)
   registry.lastUpdate = event.block.number
 
@@ -237,8 +237,8 @@ export function handleTrade(event: Trade): void {
   }
   swap.newPriceUSD = convertToUsd(token1.id, swap.newPriceToken1)
   swap.avgPriceUSD = convertToUsd(token1.id, swap.avgPriceToken1)
-  swap.newPriceXCHF = convertToChf(Address.fromString(token1.id), swap.newPriceToken1)
-  swap.avgPriceXCHF = convertToChf(Address.fromString(token1.id), swap.newPriceToken1)
+  swap.newpriceCHF = convertToChf(Address.fromString(token1.id), swap.newPriceToken1)
+  swap.avgpriceCHF = convertToChf(Address.fromString(token1.id), swap.newPriceToken1)
   swap.logIndex = event.logIndex
   swap.save()
 
@@ -274,20 +274,20 @@ export function handlePriceSet(event: PriceSet): void {
       if (pair.token1Price.gt(ZERO_BD)) {
         pair.token0Price = ONE_BD.div(pair.token1Price)
       }
-      pair.priceXCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
+      pair.priceCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
       pair.priceUSD = convertToUsd(token1.id, pair.token1Price)
 
-      token1.derivedUSD = convertToUsd(token1.id, token1.derivedXCHF);
-      token0.derivedXCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
+      token1.derivedUSD = convertToUsd(token1.id, token1.derivedCHF);
+      token0.derivedCHF = convertToChf(Address.fromString(token1.id), pair.token1Price)
       token0.derivedUSD = convertToUsd(token1.id, pair.token1Price)
       token0.totalShares = fetchTokenTotalShares(Address.fromString(token0.id))
       if(token0.totalShares !== null) {
-        token0.marketCap = token0.derivedXCHF.times(token0.totalShares!.toBigDecimal())
+        token0.marketCap = token0.derivedCHF.times(token0.totalShares!.toBigDecimal())
       }   
       let marketToken1Balance  = convertTokenToDecimal(fetchTokenBalance(Address.fromString(token1.id), Address.fromString(pair.id)), token1.decimals)
       let marketTokenBalance = convertTokenToDecimal(fetchTokenBalance(Address.fromString(token0.id), Address.fromString(pair.id)), token0.decimals)
-      pair.totalValueLockedXCHF = marketToken1Balance.plus(marketTokenBalance.times(pair.token1Price))
-      pair.totalValueLockedUSD = convertToUsd(token1.id, pair.totalValueLockedXCHF)
+      pair.totalValueLockedCHF = marketToken1Balance.plus(marketTokenBalance.times(pair.token1Price))
+      pair.totalValueLockedUSD = convertToUsd(token1.id, pair.totalValueLockedCHF)
 
       pair.save()
       token0.save()

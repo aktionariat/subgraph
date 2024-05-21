@@ -29,19 +29,19 @@ export function updateAktionariatWeekData(event: ethereum.Event, swap:Swap): Akt
   if (aktionariatWeekData === null) {
     aktionariatWeekData = new AktionariatWeekData(weekID.toString())
     aktionariatWeekData.date = weekStartTimestamp
-    aktionariatWeekData.volumeXCHF = constants.BIGDECIMAL_ZERO
+    aktionariatWeekData.volumeCHF = constants.BIGDECIMAL_ZERO
     aktionariatWeekData.volumeUSD = constants.BIGDECIMAL_ZERO
     aktionariatWeekData.txCount = constants.BIGINT_ZERO
   }
   aktionariatWeekData.totalValueLockedUSD = registry!.totalValueLockedUSD
-  aktionariatWeekData.totalValueLockedXCHF = registry!.totalValueLockedXCHF
+  aktionariatWeekData.totalValueLockedCHF = registry!.totalValueLockedCHF
   aktionariatWeekData.totalRaisedUSD = registry!.totalRaisedUSD
-  aktionariatWeekData.totalRaisedXCHF = registry!.totalRaisedXCHF
-  aktionariatWeekData.liquidityXCHF = registry!.liquidityXCHF
+  aktionariatWeekData.totalRaisedCHF = registry!.totalRaisedCHF
+  aktionariatWeekData.liquidityCHF = registry!.liquidityCHF
   aktionariatWeekData.liquidityUSD = registry!.liquidityUSD
   aktionariatWeekData.txCount = aktionariatWeekData.txCount.plus(constants.BIGINT_ONE)
   // update volume metrics
-  aktionariatWeekData.volumeXCHF = aktionariatWeekData.volumeXCHF.plus(swap.amountXCHF)
+  aktionariatWeekData.volumeCHF = aktionariatWeekData.volumeCHF.plus(swap.amountXCHF)
   aktionariatWeekData.volumeUSD = aktionariatWeekData.volumeUSD.plus(swap.amountUSD)
   aktionariatWeekData.save()
   return aktionariatWeekData as AktionariatWeekData
@@ -56,19 +56,19 @@ export function updateAktionariatDayData(event: ethereum.Event, swap:Swap): Akti
   if (aktionariatDayData === null) {
     aktionariatDayData = new AktionariatDayData(dayID.toString())
     aktionariatDayData.date = dayStartTimestamp
-    aktionariatDayData.volumeXCHF = constants.BIGDECIMAL_ZERO
+    aktionariatDayData.volumeCHF = constants.BIGDECIMAL_ZERO
     aktionariatDayData.volumeUSD = constants.BIGDECIMAL_ZERO
     aktionariatDayData.txCount = constants.BIGINT_ZERO
   }
   aktionariatDayData.totalValueLockedUSD = registry!.totalValueLockedUSD
-  aktionariatDayData.totalValueLockedXCHF = registry!.totalValueLockedXCHF
+  aktionariatDayData.totalValueLockedCHF = registry!.totalValueLockedCHF
   aktionariatDayData.totalRaisedUSD = registry!.totalRaisedUSD
-  aktionariatDayData.totalRaisedXCHF = registry!.totalRaisedXCHF
-  aktionariatDayData.liquidityXCHF = registry!.liquidityXCHF
+  aktionariatDayData.totalRaisedCHF = registry!.totalRaisedCHF
+  aktionariatDayData.liquidityCHF = registry!.liquidityCHF
   aktionariatDayData.liquidityUSD = registry!.liquidityUSD
   aktionariatDayData.txCount = aktionariatDayData.txCount.plus(constants.BIGINT_ONE)
   // update volume metrics
-  aktionariatDayData.volumeXCHF = aktionariatDayData.volumeXCHF.plus(swap.amountXCHF)
+  aktionariatDayData.volumeCHF = aktionariatDayData.volumeCHF.plus(swap.amountXCHF)
   aktionariatDayData.volumeUSD = aktionariatDayData.volumeUSD.plus(swap.amountUSD)
   aktionariatDayData.save()
   return aktionariatDayData as AktionariatDayData
@@ -93,9 +93,9 @@ export function updatePairWeekData(event: ethereum.Event, swap:Swap): PairWeekDa
       pairWeekData.volumeToken1 = constants.BIGDECIMAL_ZERO
       pairWeekData.volumeToken0 = constants.BIGDECIMAL_ZERO
       pairWeekData.volumeUSD = constants.BIGDECIMAL_ZERO
-      pairWeekData.volumeXCHF = constants.BIGDECIMAL_ZERO
+      pairWeekData.volumeCHF = constants.BIGDECIMAL_ZERO
       pairWeekData.liquidityUSD = constants.BIGDECIMAL_ZERO
-      pairWeekData.liquidityXCHF = constants.BIGDECIMAL_ZERO
+      pairWeekData.liquidityCHF = constants.BIGDECIMAL_ZERO
       pairWeekData.txCount = constants.BIGINT_ZERO
       pairWeekData.open = pair.token1Price
       pairWeekData.high = pair.token1Price
@@ -114,17 +114,17 @@ export function updatePairWeekData(event: ethereum.Event, swap:Swap): PairWeekDa
     pairWeekData.token1Price = pair.token1Price
     pairWeekData.close = pair.token1Price
     pairWeekData.priceUSD = pair.priceUSD
-    pairWeekData.priceXCHF = pair.priceXCHF
+    pairWeekData.priceCHF = pair.priceCHF
     pairWeekData.totalValueLockedUSD = pair.totalValueLockedUSD
-    pairWeekData.totalValueLockedXCHF = pair.totalValueLockedXCHF
+    pairWeekData.totalValueLockedCHF = pair.totalValueLockedCHF
     pairWeekData.liquidityUSD = pair.liquidityUSD
-    pairWeekData.liquidityXCHF = pair.liquidityXCHF
+    pairWeekData.liquidityCHF = pair.liquidityCHF
     pairWeekData.txCount = pairWeekData.txCount.plus(constants.BIGINT_ONE)
     // update volume metrics
     pairWeekData.volumeToken1 = pairWeekData.volumeToken1.plus(swap.amountToken1)
     pairWeekData.volumeToken0 = pairWeekData.volumeToken0.plus(swap.amountToken0)
     pairWeekData.volumeUSD = pairWeekData.volumeUSD.plus(swap.amountUSD)
-    pairWeekData.volumeXCHF = pairWeekData.volumeXCHF.plus(swap.amountXCHF)
+    pairWeekData.volumeCHF = pairWeekData.volumeCHF.plus(swap.amountXCHF)
     pairWeekData.save()
   }
 
@@ -150,7 +150,7 @@ export function updatePairDayData(event: ethereum.Event, swap:Swap): PairDayData
       pairDayData.volumeToken1 = constants.BIGDECIMAL_ZERO
       pairDayData.volumeToken0 = constants.BIGDECIMAL_ZERO
       pairDayData.volumeUSD = constants.BIGDECIMAL_ZERO
-      pairDayData.volumeXCHF = constants.BIGDECIMAL_ZERO
+      pairDayData.volumeCHF = constants.BIGDECIMAL_ZERO
       pairDayData.txCount = constants.BIGINT_ZERO
       pairDayData.open = pair.token1Price
       pairDayData.high = pair.token1Price
@@ -169,17 +169,17 @@ export function updatePairDayData(event: ethereum.Event, swap:Swap): PairDayData
     pairDayData.token1Price = pair.token1Price
     pairDayData.close = pair.token1Price
     pairDayData.priceUSD = pair.priceUSD
-    pairDayData.priceXCHF = pair.priceXCHF
+    pairDayData.priceCHF = pair.priceCHF
     pairDayData.totalValueLockedUSD = pair.totalValueLockedUSD
-    pairDayData.totalValueLockedXCHF = pair.totalValueLockedXCHF
-    pairDayData.liquidityXCHF = pair.liquidityXCHF
+    pairDayData.totalValueLockedCHF = pair.totalValueLockedCHF
+    pairDayData.liquidityCHF = pair.liquidityCHF
     pairDayData.liquidityUSD = pair.liquidityUSD
     pairDayData.txCount = pairDayData.txCount.plus(constants.BIGINT_ONE)
     // update volume metrics
     pairDayData.volumeToken1 = pairDayData.volumeToken1.plus(swap.amountToken1)
     pairDayData.volumeToken0 = pairDayData.volumeToken0.plus(swap.amountToken0)
     pairDayData.volumeUSD = pairDayData.volumeUSD.plus(swap.amountUSD)
-    pairDayData.volumeXCHF = pairDayData.volumeXCHF.plus(swap.amountXCHF)
+    pairDayData.volumeCHF = pairDayData.volumeCHF.plus(swap.amountXCHF)
     pairDayData.save()
   }
 
@@ -206,7 +206,7 @@ export function updatePairHourData(event: ethereum.Event, swap:Swap): PairHourDa
       pairHourData.volumeToken1 = constants.BIGDECIMAL_ZERO
       pairHourData.volumeToken0 = constants.BIGDECIMAL_ZERO
       pairHourData.volumeUSD = constants.BIGDECIMAL_ZERO
-      pairHourData.volumeXCHF = constants.BIGDECIMAL_ZERO
+      pairHourData.volumeCHF = constants.BIGDECIMAL_ZERO
       pairHourData.txCount = constants.BIGINT_ZERO
       pairHourData.open = pair.token1Price
       pairHourData.high = pair.token1Price
@@ -225,17 +225,17 @@ export function updatePairHourData(event: ethereum.Event, swap:Swap): PairHourDa
     pairHourData.token1Price = pair.token1Price
     pairHourData.close = pair.token1Price
     pairHourData.priceUSD = pair.priceUSD
-    pairHourData.priceXCHF = pair.priceXCHF
+    pairHourData.priceCHF = pair.priceCHF
     pairHourData.totalValueLockedUSD = pair.totalValueLockedUSD
-    pairHourData.totalValueLockedXCHF = pair.totalValueLockedXCHF
-    pairHourData.liquidityXCHF = pair.liquidityXCHF
+    pairHourData.totalValueLockedCHF = pair.totalValueLockedCHF
+    pairHourData.liquidityCHF = pair.liquidityCHF
     pairHourData.liquidityUSD = pair.liquidityUSD
     pairHourData.txCount = pairHourData.txCount.plus(constants.BIGINT_ONE)
     // update volume metrics  
     pairHourData.volumeToken1 = pairHourData.volumeToken1.plus(swap.amountToken1)
     pairHourData.volumeToken0 = pairHourData.volumeToken0.plus(swap.amountToken0)
     pairHourData.volumeUSD = pairHourData.volumeUSD.plus(swap.amountUSD)
-    pairHourData.volumeXCHF = pairHourData.volumeXCHF.plus(swap.amountXCHF)
+    pairHourData.volumeCHF = pairHourData.volumeCHF.plus(swap.amountXCHF)
     pairHourData.save()
   }
     
@@ -250,7 +250,7 @@ export function updateTokenWeekData(token: Token, event: ethereum.Event, swap:Sw
     .toString()
     .concat('-')
     .concat(weekID.toString())
-  let tokenPrice = token.derivedXCHF
+  let tokenPrice = token.derivedCHF
   let tokenWeekData = TokenWeekData.load(tokenDayID)
   if (tokenWeekData === null) {
     tokenWeekData = new TokenWeekData(tokenDayID)
@@ -258,7 +258,7 @@ export function updateTokenWeekData(token: Token, event: ethereum.Event, swap:Sw
     tokenWeekData.token = token.id
     tokenWeekData.volume = constants.BIGDECIMAL_ZERO
     tokenWeekData.volumeUSD = constants.BIGDECIMAL_ZERO
-    tokenWeekData.volumeXCHF = constants.BIGDECIMAL_ZERO
+    tokenWeekData.volumeCHF = constants.BIGDECIMAL_ZERO
     tokenWeekData.open = tokenPrice
     tokenWeekData.high = tokenPrice
     tokenWeekData.low = tokenPrice
@@ -275,16 +275,16 @@ export function updateTokenWeekData(token: Token, event: ethereum.Event, swap:Sw
 
   tokenWeekData.close = tokenPrice
   tokenWeekData.priceUSD = token.derivedUSD
-  tokenWeekData.priceXCHF = token.derivedXCHF
+  tokenWeekData.priceCHF = token.derivedCHF
   tokenWeekData.totalValueLocked = token.totalValueLocked
   tokenWeekData.totalValueLockedUSD = token.totalValueLockedUSD
-  tokenWeekData.totalValueLockedXCHF = token.totalValueLockedXCHF
+  tokenWeekData.totalValueLockedCHF = token.totalValueLockedCHF
   // update volmue metrics
   tokenWeekData.volume = tokenWeekData.volume.plus(swap.amountToken0)
   tokenWeekData.volumeUSD = tokenWeekData.volumeUSD.plus(swap.amountUSD)
-  tokenWeekData.volumeXCHF = tokenWeekData.volumeXCHF.plus(swap.amountXCHF)
+  tokenWeekData.volumeCHF = tokenWeekData.volumeCHF.plus(swap.amountXCHF)
   // liqudity metrics
-  tokenWeekData.liquidityXCHF = token.liquidityXCHF
+  tokenWeekData.liquidityCHF = token.liquidityCHF
   tokenWeekData.liquidityUSD = token.liquidityUSD
   // raised metrics
   if (swap.isBuy) {
@@ -307,7 +307,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event, swap:Swa
     .toString()
     .concat('-')
     .concat(dayID.toString())
-  let tokenPrice = token.derivedXCHF
+  let tokenPrice = token.derivedCHF
   let tokenDayData = TokenDayData.load(tokenDayID)
   if (tokenDayData === null) {
     tokenDayData = new TokenDayData(tokenDayID)
@@ -315,7 +315,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event, swap:Swa
     tokenDayData.token = token.id
     tokenDayData.volume = constants.BIGDECIMAL_ZERO
     tokenDayData.volumeUSD = constants.BIGDECIMAL_ZERO
-    tokenDayData.volumeXCHF = constants.BIGDECIMAL_ZERO
+    tokenDayData.volumeCHF = constants.BIGDECIMAL_ZERO
     tokenDayData.open = tokenPrice
     tokenDayData.high = tokenPrice
     tokenDayData.low = tokenPrice
@@ -332,16 +332,16 @@ export function updateTokenDayData(token: Token, event: ethereum.Event, swap:Swa
 
   tokenDayData.close = tokenPrice
   tokenDayData.priceUSD = token.derivedUSD
-  tokenDayData.priceXCHF = token.derivedXCHF
+  tokenDayData.priceCHF = token.derivedCHF
   tokenDayData.totalValueLocked = token.totalValueLocked
   tokenDayData.totalValueLockedUSD = token.totalValueLockedUSD
-  tokenDayData.totalValueLockedXCHF = token.totalValueLockedXCHF
+  tokenDayData.totalValueLockedCHF = token.totalValueLockedCHF
   // update volume metrics  
   tokenDayData.volume = tokenDayData.volume.plus(swap.amountToken1)
   tokenDayData.volumeUSD = tokenDayData.volumeUSD.plus(swap.amountUSD)
-  tokenDayData.volumeXCHF = tokenDayData.volumeXCHF.plus(swap.amountXCHF)
+  tokenDayData.volumeCHF = tokenDayData.volumeCHF.plus(swap.amountXCHF)
   // liqudity metrics
-  tokenDayData.liquidityXCHF = token.liquidityXCHF
+  tokenDayData.liquidityCHF = token.liquidityCHF
   tokenDayData.liquidityUSD = token.liquidityUSD
   // raised metrics
   if (swap.isBuy) {
@@ -365,7 +365,7 @@ export function updateTokenHourData(token: Token, event: ethereum.Event, swap:Sw
     .concat('-')
     .concat(hourIndex.toString())
   let tokenHourData = TokenHourData.load(tokenHourID)
-  let tokenPrice = token.derivedXCHF
+  let tokenPrice = token.derivedCHF
 
   if (tokenHourData === null) {
     tokenHourData = new TokenHourData(tokenHourID)
@@ -373,7 +373,7 @@ export function updateTokenHourData(token: Token, event: ethereum.Event, swap:Sw
     tokenHourData.token = token.id
     tokenHourData.volume = constants.BIGDECIMAL_ZERO
     tokenHourData.volumeUSD = constants.BIGDECIMAL_ZERO
-    tokenHourData.volumeXCHF = constants.BIGDECIMAL_ZERO
+    tokenHourData.volumeCHF = constants.BIGDECIMAL_ZERO
     tokenHourData.open = tokenPrice
     tokenHourData.high = tokenPrice
     tokenHourData.low = tokenPrice
@@ -390,16 +390,16 @@ export function updateTokenHourData(token: Token, event: ethereum.Event, swap:Sw
 
   tokenHourData.close = tokenPrice
   tokenHourData.priceUSD = token.derivedUSD
-  tokenHourData.priceXCHF = token.derivedXCHF
+  tokenHourData.priceCHF = token.derivedCHF
   tokenHourData.totalValueLocked = token.totalValueLocked
   tokenHourData.totalValueLockedUSD = token.totalValueLockedUSD
-  tokenHourData.totalValueLockedXCHF = token.totalValueLockedXCHF
+  tokenHourData.totalValueLockedCHF = token.totalValueLockedCHF
   // update volume metrics
   tokenHourData.volume = tokenHourData.volume.plus(swap.amountToken0)
   tokenHourData.volumeUSD = tokenHourData.volumeUSD.plus(swap.amountUSD)
-  tokenHourData.volumeXCHF = tokenHourData.volumeXCHF.plus(swap.amountXCHF)
+  tokenHourData.volumeCHF = tokenHourData.volumeCHF.plus(swap.amountXCHF)
   // liqudity metrics
-  tokenHourData.liquidityXCHF = token.liquidityXCHF
+  tokenHourData.liquidityCHF = token.liquidityCHF
   tokenHourData.liquidityUSD = token.liquidityUSD
   // raised metrics
   if (swap.isBuy) {
