@@ -247,9 +247,9 @@ export function getRegistry(registryAddress: string): Registry {
     registry.marketCount = ZERO_BI
     registry.txCount = ZERO_BI
     registry.totalValueLockedUSD = ZERO_BD
-    registry.totalValueLockedXCHF = ZERO_BD
+    registry.totalValueLockedCHF = ZERO_BD
     registry.totalVolumeUSD = ZERO_BD
-    registry.totalVolumeXCHF = ZERO_BD
+    registry.totalVolumeCHF = ZERO_BD
   }
   return registry;
 }
@@ -285,13 +285,13 @@ export function getEntities(event: RegisterBrokerbot  ): Entities {
     base.totalSupply = fetchTokenTotalSupply(baseAddress)
     base.decimals = fetchTokenDecimals(baseAddress)
 
-    base.derivedXCHF = ZERO_BD
+    base.derivedCHF = ZERO_BD
     base.derivedUSD = ZERO_BD
     base.tradeVolume = ZERO_BD
     base.tradeVolumeUSD = ZERO_BD
-    base.tradeVolumeXCHF = ZERO_BD
+    base.tradeVolumeCHF = ZERO_BD
     base.totalValueLocked = ZERO_BD
-    base.totalValueLockedXCHF = ZERO_BD
+    base.totalValueLockedCHF = ZERO_BD
     base.totalValueLockedUSD = ZERO_BD
     base.txCount = ZERO_BI
     base.firstTradeTimestamp = ZERO_BI
@@ -309,16 +309,16 @@ export function getEntities(event: RegisterBrokerbot  ): Entities {
     token.decimals = fetchTokenDecimals(tokenAddress)
     token.totalShares = fetchTokenTotalShares(tokenAddress)
   
-    token.derivedXCHF = ZERO_BD
+    token.derivedCHF = ZERO_BD
     token.derivedUSD = ZERO_BD
     token.tradeVolume = ZERO_BD
     token.tradeVolumeUSD = ZERO_BD
-    token.tradeVolumeXCHF = ZERO_BD
+    token.tradeVolumeCHF = ZERO_BD
     token.totalValueLocked = ZERO_BD
-    token.totalValueLockedXCHF = ZERO_BD
+    token.totalValueLockedCHF = ZERO_BD
     token.totalValueLockedUSD = ZERO_BD
     token.txCount = ZERO_BI
-    token.firstTradePriceXCHF = ZERO_BD
+    token.firstTradePriceCHF = ZERO_BD
     token.firstTradeTimestamp = ZERO_BI
     token.firstTradeBlock = ZERO_BI
 
