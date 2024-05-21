@@ -7,6 +7,14 @@ import {
   fetchTokenDecimals
 } from '../helpers'
 
+export function getUsdPriceFromQuoter(tokenAddress: Address, network: string): CustomPriceType {
+  let zchfAddress = constants.WHITELIST_TOKENS_MAP.get(network)!.get("ZCHF")!;
+  if (tokenAddress == zchfAddress) {
+    return getPriceUSDT(tokenAddress, network);
+  } else { 
+    return getPriceDai(tokenAddress, network);
+  }
+}
 
 export function getPriceDai(tokenAddress: Address, network: string): CustomPriceType {
   return getPriceFromQuoterDai(tokenAddress, network);
@@ -20,6 +28,7 @@ export function getPriceFromQuoterDai(tokenAddress: Address, network: string): C
 export function getPriceFromQuoter(token0Address: Address, token1Address: Address, network: string): CustomPriceType {
   let wethAddress = constants.WHITELIST_TOKENS_MAP.get(network)!.get("WETH")!;
   let daiAddress = constants.WHITELIST_TOKENS_MAP.get(network)!.get("DAI")!;
+  let zchfAddress = constants.WHITELIST_TOKENS_MAP.get(network)!.get("ZCHF")!;
 
   let path: Address[] = [];
   let encodedPath: Bytes = Bytes.fromI32(0);
@@ -33,7 +42,7 @@ export function getPriceFromQuoter(token0Address: Address, token1Address: Addres
     path.push(wethAddress);
     path.push(token1Address);
   } else {
-    // Path = [xchf, dai, weth, usdc]
+    // Path = [xchf, dai]
     numberOfJumps = BigInt.fromI32(1);
 
     path.push(token0Address);
@@ -68,6 +77,28 @@ export function getPriceFromQuoter(token0Address: Address, token1Address: Addres
       .toBigDecimal();
 
     return CustomPriceType.initialize(amountOutBigDecimal, constants.DEFAULT_DECIMALS.toI32());
+  }
+
+  return new CustomPriceType();
+}
+
+export function getPriceUSDT(tokenAddress: Address, network: string): CustomPriceType {
+  let quoterAddress = constants.UNISWAP_QUOTER_CONTRACT_ADDRESSES_MAP.get(network)!;
+  let usdtAddress = constants.WHITELIST_TOKENS_MAP.get(network)!.get("USDT")!;
+
+  let tokenDecimals = fetchTokenDecimals(tokenAddress);
+  let amountIn = BigInt.fromI32(10).pow(tokenDecimals.toI32() as u8);
+
+  let amountOutResult: ethereum.CallResult<BigInt>;
+  if (quoterAddress) {
+    const uniswapQuoter = UniswapQuoterContract.bind(quoterAddress);
+    //amountOutResult = uniswapQuoter.try_quoteExactInput(encodedPath, amountIn);
+    amountOutResult = uniswapQuoter.try_quoteExactInputSingle(tokenAddress, usdtAddress, 500, amountIn, constants.BIGINT_ZERO);
+    if (amountOutResult.reverted) {
+      return new CustomPriceType();
+    }
+
+    return CustomPriceType.initialize(amountOutResult.value.toBigDecimal(), constants.DEFAULT_DECIMALS.toI32());
   }
 
   return new CustomPriceType();

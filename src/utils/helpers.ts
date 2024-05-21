@@ -16,7 +16,7 @@ import {
 import { Brokerbot as BrokerbotTemplate } from "../../generated/templates"
 import * as constants from "./common/constants";
 import { CustomPriceType } from "./common/types";
-import { getPriceDai as getPriceDaiUniswap } from "./quoters/UniswapQuoter";
+import { getUsdPriceFromQuoter } from "./quoters/UniswapQuoter";
 import { RegisterBrokerbot } from '../../generated/BrokerbotRegistry/BrokerbotRegistry'
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
@@ -339,7 +339,7 @@ export function getUsdPricePerToken(tokenAddr: Address): CustomPriceType {
   let network = dataSource.network();
 
   // Uniswap Quoter
-  let uniswapPrice = getPriceDaiUniswap(tokenAddr, network);
+  let uniswapPrice = getUsdPriceFromQuoter(tokenAddr, network);
   if (!uniswapPrice.reverted) {
     //log.warning("[UniswapQuoter] tokenAddress: {}, Price: {}", [
     //  tokenAddr.toHexString(),
