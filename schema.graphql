@@ -23,7 +23,7 @@ type Registry @entity {
   liquidityUSD: BigDecimal!
 
   " current owner of the registry"
-  owner: ID!
+  owner: ID
 
   " block number of the last update"
   lastUpdate: BigInt!
@@ -64,9 +64,9 @@ type Token @entity {
   " liquidity in terms of XCHF/ZCHF"
   liquidityCHF: BigDecimal!
   " total raised in XCHF/ZCHF"
-  totalRaisedCHF: BigDecimal!
+  totalRaisedCHF: BigDecimal
   " total raised in USD"
-  totalRaisedUSD: BigDecimal!
+  totalRaisedUSD: BigDecimal
   " derived price in XCHF/ZCHF"
   derivedCHF: BigDecimal!
   " derived price in usd "
@@ -74,10 +74,10 @@ type Token @entity {
   " market cap in XCHF/ZCHF "
   marketCap: BigDecimal
   " first trade price in XCHF/ZCHF "
-  firstTradePriceCHF: BigDecimal!
+  firstTradePriceCHF: BigDecimal
   " first trade timestamp and block"
-  firstTradeTimestamp: BigInt!
-  firstTradeBlock: BigInt!
+  firstTradeTimestamp: BigInt
+  firstTradeBlock: BigInt
     # derived fields
   tokenHourData: [TokenHourData!]! @derivedFrom(field: "token")
   swaps: [Swap!]! @derivedFrom(field: "token")
@@ -92,7 +92,6 @@ type Brokerbot @entity {
   token: Token! 
   reserveBase: BigDecimal!
   reserveToken: BigDecimal!
-  totalSupply: BigDecimal!
   
   " calculated total vaule locked"
   totalValueLockedCHF: BigDecimal!
@@ -139,8 +138,8 @@ type Transaction @entity {
   " timestamp txn was confirmed"
   timestamp: BigInt!
   " gas used during txn execution"
-  gasUsed: BigInt!
-  gasPrice: BigInt!
+  gasUsed: BigInt
+  gasPrice: BigInt
   " derived values"
   swaps: [Swap!]
 }

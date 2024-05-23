@@ -93,12 +93,21 @@ export function getPriceUSDT(tokenAddress: Address, network: string): CustomPric
   if (quoterAddress) {
     const uniswapQuoter = UniswapQuoterContract.bind(quoterAddress);
     //amountOutResult = uniswapQuoter.try_quoteExactInput(encodedPath, amountIn);
-    amountOutResult = uniswapQuoter.try_quoteExactInputSingle(tokenAddress, usdtAddress, 500, amountIn, constants.BIGINT_ZERO);
+    amountOutResult = uniswapQuoter.try_quoteExactInputSingle(tokenAddress, usdtAddress, 100, amountIn, constants.BIGINT_ZERO);
     if (amountOutResult.reverted) {
       return new CustomPriceType();
     }
 
-    return CustomPriceType.initialize(amountOutResult.value.toBigDecimal(), constants.DEFAULT_DECIMALS.toI32());
+    let amountOut = amountOutResult.value;
+    let feeBips = BigInt.fromI32(1); // .01%
+    let numberOfJumps = BigInt.fromI32(1);
+
+    let amountOutBigDecimal = amountOut
+      .times(constants.BIGINT_TEN_THOUSAND)
+      .div(constants.BIGINT_TEN_THOUSAND.minus(feeBips.times(numberOfJumps)))
+      .toBigDecimal();
+
+    return CustomPriceType.initialize(amountOutBigDecimal, constants.DEFAULT_USDT_DECIMALS.toI32());
   }
 
   return new CustomPriceType();

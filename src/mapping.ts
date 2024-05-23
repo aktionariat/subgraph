@@ -40,6 +40,21 @@ export function handleTrade(event: Trade): void {
     registry.marketCount = registry.marketCount.plus(ONE_BI)
     brokerbot.createdAtTimestamp = event.block.timestamp
     brokerbot.createdAtBlockNumber = event.block.number
+    brokerbot.reserveBase = ZERO_BD
+    brokerbot.reserveToken = ZERO_BD
+    brokerbot.totalValueLockedCHF = ZERO_BD
+    brokerbot.totalValueLockedUSD = ZERO_BD
+    brokerbot.totalRaisedCHF = ZERO_BD
+    brokerbot.totalRaisedUSD = ZERO_BD
+    brokerbot.liquidityCHF = ZERO_BD
+    brokerbot.liquidityUSD = ZERO_BD
+    brokerbot.priceCHF = ZERO_BD
+    brokerbot.priceUSD = ZERO_BD
+    brokerbot.volumeBase = ZERO_BD
+    brokerbot.volumeCHF = ZERO_BD
+    brokerbot.volumeUSD = ZERO_BD
+    brokerbot.volumeToken = ZERO_BD
+    brokerbot.txCount = ZERO_BI
   }
 
   // load the base currency
@@ -58,7 +73,10 @@ export function handleTrade(event: Trade): void {
     base.tradeVolumeUSD = ZERO_BD
     base.tradeVolumeCHF = ZERO_BD
     base.totalValueLocked = ZERO_BD
+    base.totalValueLockedCHF = ZERO_BD
     base.txCount = ZERO_BI
+    base.liquidityCHF = ZERO_BD
+    base.liquidityUSD = ZERO_BD
   }
 
   // load share token
@@ -82,6 +100,10 @@ export function handleTrade(event: Trade): void {
     token.totalValueLockedUSD = ZERO_BD
     token.txCount = ZERO_BI
     token.firstTradePriceCHF = ZERO_BD
+    token.totalRaisedCHF = ZERO_BD
+    token.totalRaisedUSD = ZERO_BD
+    token.liquidityUSD = ZERO_BD
+    token.liquidityCHF = ZERO_BD
 
     // if there is a new token means new market on the registry
     registry.tokenCount = registry.tokenCount.plus(ONE_BI)
@@ -156,11 +178,11 @@ export function handleTrade(event: Trade): void {
   token.totalValueLockedCHF = brokerbot.totalValueLockedCHF
   token.totalValueLockedUSD = brokerbot.totalValueLockedUSD
   if (event.params.amount > ZERO_BI) {
-    token.totalRaisedCHF = token.totalRaisedCHF.plus(amountCHF)
-    token.totalRaisedUSD = token.totalRaisedUSD.plus(amountUSD)
+    token.totalRaisedCHF = token.totalRaisedCHF!.plus(amountCHF)
+    token.totalRaisedUSD = token.totalRaisedUSD!.plus(amountUSD)
   } else {
-    token.totalRaisedCHF = token.totalRaisedCHF.minus(amountCHF)
-    token.totalRaisedUSD = token.totalRaisedUSD.minus(amountUSD)
+    token.totalRaisedCHF = token.totalRaisedCHF!.minus(amountCHF)
+    token.totalRaisedUSD = token.totalRaisedUSD!.minus(amountUSD)
   }
   token.liquidityCHF = brokerbot.liquidityCHF
   token.liquidityUSD = brokerbot.liquidityUSD
@@ -172,16 +194,16 @@ export function handleTrade(event: Trade): void {
     token.marketCap = token.derivedCHF.times(token.totalShares!.toBigDecimal())
   }
   // if token initial where given out with at price 0
-  if (token.firstTradePriceCHF == ZERO_BD){
-    token.firstTradePriceCHF = token.derivedCHF
+  if (token.firstTradePriceCHF! == ZERO_BD){
+    token.firstTradePriceCHF! = token.derivedCHF
   }
 
   // first trade init
-  if (token.firstTradeTimestamp == ZERO_BI) {
+  if (!token.firstTradeTimestamp || token.firstTradeTimestamp! == ZERO_BI) {
     token.firstTradeTimestamp = event.block.timestamp
     token.firstTradeBlock = event.block.number
   }
-  if (base.firstTradeTimestamp == ZERO_BI) {
+  if (!base.firstTradeTimestamp || base.firstTradeTimestamp!  == ZERO_BI) {
     base.firstTradeTimestamp = event.block.timestamp
     base.firstTradeBlock = event.block.number
   }

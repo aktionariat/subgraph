@@ -245,11 +245,16 @@ export function getRegistry(registryAddress: string): Registry {
   if (registry === null) {
     registry = new Registry(registryAddress)
     registry.marketCount = ZERO_BI
+    registry.tokenCount = ZERO_BI
     registry.txCount = ZERO_BI
     registry.totalValueLockedUSD = ZERO_BD
     registry.totalValueLockedCHF = ZERO_BD
     registry.totalVolumeUSD = ZERO_BD
     registry.totalVolumeCHF = ZERO_BD
+    registry.totalRaisedCHF = ZERO_BD
+    registry.totalRaisedUSD = ZERO_BD
+    registry.liquidityCHF =  ZERO_BD
+    registry.liquidityUSD =  ZERO_BD
   }
   return registry;
 }
@@ -273,6 +278,23 @@ export function getEntities(event: RegisterBrokerbot  ): Entities {
     registry.marketCount = registry.marketCount.plus(ONE_BI)
     brokerbot.createdAtTimestamp = event.block.timestamp
     brokerbot.createdAtBlockNumber = event.block.number
+    brokerbot.reserveBase = ZERO_BD
+    brokerbot.reserveToken = ZERO_BD
+    brokerbot.totalValueLockedCHF = ZERO_BD
+    brokerbot.totalValueLockedUSD = ZERO_BD
+    brokerbot.liquidityCHF = ZERO_BD
+    brokerbot.liquidityUSD = ZERO_BD
+    brokerbot.basePrice = ZERO_BD
+    brokerbot.tokenPrice = ZERO_BD
+    brokerbot.priceCHF = ZERO_BD
+    brokerbot.priceUSD = ZERO_BD
+    brokerbot.volumeBase = ZERO_BD
+    brokerbot.volumeCHF = ZERO_BD
+    brokerbot.volumeUSD = ZERO_BD
+    brokerbot.volumeToken = ZERO_BD
+    brokerbot.txCount = ZERO_BI
+    brokerbot.totalRaisedCHF = ZERO_BD
+    brokerbot.totalRaisedUSD = ZERO_BD
   }
 
   // load the base token
@@ -309,15 +331,19 @@ export function getEntities(event: RegisterBrokerbot  ): Entities {
     token.decimals = fetchTokenDecimals(tokenAddress)
     token.totalShares = fetchTokenTotalShares(tokenAddress)
   
-    token.derivedCHF = ZERO_BD
-    token.derivedUSD = ZERO_BD
-    token.tradeVolume = ZERO_BD
     token.tradeVolumeUSD = ZERO_BD
     token.tradeVolumeCHF = ZERO_BD
+    token.tradeVolume = ZERO_BD
+    token.txCount = ZERO_BI
     token.totalValueLocked = ZERO_BD
     token.totalValueLockedCHF = ZERO_BD
     token.totalValueLockedUSD = ZERO_BD
-    token.txCount = ZERO_BI
+    token.liquidityCHF = ZERO_BD
+    token.liquidityUSD = ZERO_BD
+    token.totalRaisedCHF = ZERO_BD
+    token.totalRaisedUSD = ZERO_BD
+    token.derivedCHF = ZERO_BD
+    token.derivedUSD = ZERO_BD
     token.firstTradePriceCHF = ZERO_BD
     token.firstTradeTimestamp = ZERO_BI
     token.firstTradeBlock = ZERO_BI

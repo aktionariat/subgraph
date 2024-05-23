@@ -14,7 +14,7 @@ import {
 } from "../../generated/schema"
 import { dataSource, ethereum, log } from '@graphprotocol/graph-ts'
 import * as constants from "./common/constants";
-import { convertToUsd } from "./helpers";
+import { ZERO_BD, convertToUsd } from "./helpers";
 
 /**
  * Tracks global aggregate data over daily windows
@@ -266,6 +266,8 @@ export function updateTokenWeekData(token: Token, event: ethereum.Event, swap:Sw
     tokenWeekData.high = tokenPrice
     tokenWeekData.low = tokenPrice
     tokenWeekData.close = tokenPrice
+    tokenWeekData.raisedCHF = ZERO_BD
+    tokenWeekData.raisedUSD = ZERO_BD
   }
 
   if (tokenPrice.gt(tokenWeekData.high)) {
@@ -323,6 +325,8 @@ export function updateTokenDayData(token: Token, event: ethereum.Event, swap:Swa
     tokenDayData.high = tokenPrice
     tokenDayData.low = tokenPrice
     tokenDayData.close = tokenPrice
+    tokenDayData.raisedCHF = ZERO_BD
+    tokenDayData.raisedUSD = ZERO_BD
   }
 
   if (tokenPrice.gt(tokenDayData.high)) {
@@ -381,6 +385,8 @@ export function updateTokenHourData(token: Token, event: ethereum.Event, swap:Sw
     tokenHourData.high = tokenPrice
     tokenHourData.low = tokenPrice
     tokenHourData.close = tokenPrice
+    tokenHourData.raisedCHF = ZERO_BD
+    tokenHourData.raisedUSD = ZERO_BD
   }
 
   if (tokenPrice.gt(tokenHourData.high)) {
