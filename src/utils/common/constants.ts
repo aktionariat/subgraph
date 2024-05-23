@@ -18,6 +18,7 @@ export const BIGDECIMAL_ZERO = new BigDecimal(BIGINT_ZERO);
 export const BIGDECIMAL_ONE = new BigDecimal(BIGINT_ONE);
 
 export const DEFAULT_USDC_DECIMALS = 6;
+export const DEFAULT_USDT_DECIMALS = BigInt.fromI32(6);
 export const DEFAULT_DECIMALS = BigInt.fromI32(18);
 
 export const ZERO_ADDRESS_STRING = "0x0000000000000000000000000000000000000000";
@@ -38,7 +39,8 @@ export const WHITELIST_TOKENS_LIST: string[] = [
   "WBTC",
   "EURS",
   "LINK",
-  "XCHF"
+  "XCHF",
+  "ZCHF"
 ];
 
 ///////////////////////////////////////////////////////////////////////////

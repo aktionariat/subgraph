@@ -52,7 +52,7 @@ export function handleSyncBrokerbot(event: SyncBrokerbot): void {
       // reset total liquidity amounts
       base.totalValueLocked = base.totalValueLocked.minus(brokerbot.reserveBase)
       token.totalValueLocked = token.totalValueLocked.minus(brokerbot.reserveToken)
-      registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.minus(brokerbot.totalValueLockedXCHF)
+      registry.totalValueLockedCHF = registry.totalValueLockedCHF.minus(brokerbot.totalValueLockedCHF)
 
       // update stats
       base.totalValueLocked = base.totalValueLocked.plus(marketBaseBalance)
@@ -67,11 +67,11 @@ export function handleSyncBrokerbot(event: SyncBrokerbot): void {
       if (brokerbot.basePrice.gt(ZERO_BD)) {
         brokerbot.tokenPrice = ONE_BD.div(brokerbot.basePrice)
       }
-      brokerbot.totalValueLockedXCHF = marketBaseBalance.plus(marketTokenBalance.times(brokerbot.basePrice))
-      brokerbot.totalValueLockedUSD = convertToUsd(base.id, brokerbot.totalValueLockedXCHF)
+      brokerbot.totalValueLockedCHF = marketBaseBalance.plus(marketTokenBalance.times(brokerbot.basePrice))
+      brokerbot.totalValueLockedUSD = convertToUsd(base.id, brokerbot.totalValueLockedCHF)
 
-      registry.totalValueLockedXCHF = registry.totalValueLockedXCHF.plus(brokerbot.totalValueLockedXCHF)
-      registry.totalValueLockedUSD = convertToUsd(base.id, registry.totalValueLockedXCHF)
+      registry.totalValueLockedCHF = registry.totalValueLockedCHF.plus(brokerbot.totalValueLockedCHF)
+      registry.totalValueLockedUSD = convertToUsd(base.id, registry.totalValueLockedCHF)
 
       // save entities
       registry.save()

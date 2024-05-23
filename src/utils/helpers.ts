@@ -16,7 +16,7 @@ import {
 import { Brokerbot as BrokerbotTemplate } from "../../generated/templates"
 import * as constants from "./common/constants";
 import { CustomPriceType } from "./common/types";
-import { getPriceDai as getPriceDaiUniswap } from "./quoters/UniswapQuoter";
+import { getUsdPriceFromQuoter } from "./quoters/UniswapQuoter";
 import { RegisterBrokerbot } from '../../generated/BrokerbotRegistry/BrokerbotRegistry'
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
@@ -26,6 +26,7 @@ export const CHAINLINK_FEED_REGISTRY_ADDRESS:Address = Address.fromString("0x449
 export const CHAIN_LINK_USD_ADDRESS = Address.fromString("0x0000000000000000000000000000000000000348")
 // export const CHAIN_LINK_CHF_ADDRESS = new Address(756) // not in use 
 export const XCHF_ADDRESS = Address.fromString("0xB4272071eCAdd69d933AdcD19cA99fe80664fc08") // only used for mainnet
+export const ZCHF_ADDRESS = Address.fromString("0xB58E61C3098d85632Df34EecfB899A1Ed80921cB") // only used for mainnet
 
 
 export let ZERO_BI = BigInt.fromI32(0)
@@ -208,7 +209,8 @@ export function convertToUsd(tokenAddress: string, value: BigDecimal): BigDecima
   // mainnet gets price thru chainlink feed
   if (network == 'mainnet') {
     let priceFeedRegistryContract = AggregatorV3Interface.bind(CHAINLINK_FEED_REGISTRY_ADDRESS)
-    if (tokenAddress == XCHF_ADDRESS.toHexString()) {
+    if (tokenAddress == XCHF_ADDRESS.toHexString()
+        || tokenAddress == ZCHF_ADDRESS.toHexString()) {
       // tokenAddress = CHAIN_LINK_CHF_ADDRESS
       // Returns the latest price of chf/usd pair from chainlink with 8 decimals
       let result = priceFeedRegistryContract.try_latestRoundData()
@@ -230,7 +232,8 @@ export function convertToUsd(tokenAddress: string, value: BigDecimal): BigDecima
 
 export function convertToChf(tokenAddress: Address, value: BigDecimal): BigDecimal {
   let network = dataSource.network();
-  if (tokenAddress == constants.WHITELIST_TOKENS_MAP.get(network)!.get("XCHF")!) {
+  if (tokenAddress == constants.WHITELIST_TOKENS_MAP.get(network)!.get("XCHF")!
+    || tokenAddress == constants.WHITELIST_TOKENS_MAP.get(network)!.get("ZCHF")!) {
     return value
   } 
   // TODO: convert from other tokens
@@ -242,11 +245,16 @@ export function getRegistry(registryAddress: string): Registry {
   if (registry === null) {
     registry = new Registry(registryAddress)
     registry.marketCount = ZERO_BI
+    registry.tokenCount = ZERO_BI
     registry.txCount = ZERO_BI
     registry.totalValueLockedUSD = ZERO_BD
-    registry.totalValueLockedXCHF = ZERO_BD
+    registry.totalValueLockedCHF = ZERO_BD
     registry.totalVolumeUSD = ZERO_BD
-    registry.totalVolumeXCHF = ZERO_BD
+    registry.totalVolumeCHF = ZERO_BD
+    registry.totalRaisedCHF = ZERO_BD
+    registry.totalRaisedUSD = ZERO_BD
+    registry.liquidityCHF =  ZERO_BD
+    registry.liquidityUSD =  ZERO_BD
   }
   return registry;
 }
@@ -270,6 +278,23 @@ export function getEntities(event: RegisterBrokerbot  ): Entities {
     registry.marketCount = registry.marketCount.plus(ONE_BI)
     brokerbot.createdAtTimestamp = event.block.timestamp
     brokerbot.createdAtBlockNumber = event.block.number
+    brokerbot.reserveBase = ZERO_BD
+    brokerbot.reserveToken = ZERO_BD
+    brokerbot.totalValueLockedCHF = ZERO_BD
+    brokerbot.totalValueLockedUSD = ZERO_BD
+    brokerbot.liquidityCHF = ZERO_BD
+    brokerbot.liquidityUSD = ZERO_BD
+    brokerbot.basePrice = ZERO_BD
+    brokerbot.tokenPrice = ZERO_BD
+    brokerbot.priceCHF = ZERO_BD
+    brokerbot.priceUSD = ZERO_BD
+    brokerbot.volumeBase = ZERO_BD
+    brokerbot.volumeCHF = ZERO_BD
+    brokerbot.volumeUSD = ZERO_BD
+    brokerbot.volumeToken = ZERO_BD
+    brokerbot.txCount = ZERO_BI
+    brokerbot.totalRaisedCHF = ZERO_BD
+    brokerbot.totalRaisedUSD = ZERO_BD
   }
 
   // load the base token
@@ -282,13 +307,13 @@ export function getEntities(event: RegisterBrokerbot  ): Entities {
     base.totalSupply = fetchTokenTotalSupply(baseAddress)
     base.decimals = fetchTokenDecimals(baseAddress)
 
-    base.derivedXCHF = ZERO_BD
+    base.derivedCHF = ZERO_BD
     base.derivedUSD = ZERO_BD
     base.tradeVolume = ZERO_BD
     base.tradeVolumeUSD = ZERO_BD
-    base.tradeVolumeXCHF = ZERO_BD
+    base.tradeVolumeCHF = ZERO_BD
     base.totalValueLocked = ZERO_BD
-    base.totalValueLockedXCHF = ZERO_BD
+    base.totalValueLockedCHF = ZERO_BD
     base.totalValueLockedUSD = ZERO_BD
     base.txCount = ZERO_BI
     base.firstTradeTimestamp = ZERO_BI
@@ -306,16 +331,20 @@ export function getEntities(event: RegisterBrokerbot  ): Entities {
     token.decimals = fetchTokenDecimals(tokenAddress)
     token.totalShares = fetchTokenTotalShares(tokenAddress)
   
-    token.derivedXCHF = ZERO_BD
-    token.derivedUSD = ZERO_BD
-    token.tradeVolume = ZERO_BD
     token.tradeVolumeUSD = ZERO_BD
-    token.tradeVolumeXCHF = ZERO_BD
-    token.totalValueLocked = ZERO_BD
-    token.totalValueLockedXCHF = ZERO_BD
-    token.totalValueLockedUSD = ZERO_BD
+    token.tradeVolumeCHF = ZERO_BD
+    token.tradeVolume = ZERO_BD
     token.txCount = ZERO_BI
-    token.firstTradePriceXCHF = ZERO_BD
+    token.totalValueLocked = ZERO_BD
+    token.totalValueLockedCHF = ZERO_BD
+    token.totalValueLockedUSD = ZERO_BD
+    token.liquidityCHF = ZERO_BD
+    token.liquidityUSD = ZERO_BD
+    token.totalRaisedCHF = ZERO_BD
+    token.totalRaisedUSD = ZERO_BD
+    token.derivedCHF = ZERO_BD
+    token.derivedUSD = ZERO_BD
+    token.firstTradePriceCHF = ZERO_BD
     token.firstTradeTimestamp = ZERO_BI
     token.firstTradeBlock = ZERO_BI
 
@@ -336,7 +365,7 @@ export function getUsdPricePerToken(tokenAddr: Address): CustomPriceType {
   let network = dataSource.network();
 
   // Uniswap Quoter
-  let uniswapPrice = getPriceDaiUniswap(tokenAddr, network);
+  let uniswapPrice = getUsdPriceFromQuoter(tokenAddr, network);
   if (!uniswapPrice.reverted) {
     //log.warning("[UniswapQuoter] tokenAddress: {}, Price: {}", [
     //  tokenAddr.toHexString(),
