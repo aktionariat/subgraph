@@ -172,7 +172,7 @@ type Swap @entity {
   " The price of the market after the swap"
   newPriceBase: BigDecimal!
   " The average paid price"
-  avgPriceBase: BigDecimal!
+  avgPriceBase: BigDecimal
   " The price of the market after the swap in USD"
   newPriceUSD: BigDecimal!
   " The average paid price in USD"

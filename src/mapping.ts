@@ -255,6 +255,7 @@ export function handleTrade(event: Trade): void {
   swap.amountUSD = amountUSD
   swap.amountCHF = amountCHF
   swap.newPriceBase = convertTokenToDecimal(event.params.newprice, base.decimals)
+  swap.avgPriceBase = ZERO_BD
   if (event.params.amount.abs().gt(ZERO_BI)) {
     swap.avgPriceBase = convertTokenToDecimal(event.params.totPrice.div(event.params.amount.abs()), base.decimals)
   }
