@@ -78,13 +78,14 @@ dataSources:
         - event: Trade(indexed address,address,bytes,int256,address,uint256,uint256,uint256)
           handler: handleTrade
       file: ./src/mapping.ts
+  
   - kind: ethereum/contract
     name: BrokerbotRegistry
     network: matic
     source: 
-      address: "0x6548fad069f2eda512a658c17606eed81095c93d"
+      address: "0xb4dC570b6Aa16d431771c0b01cB78029E0bE559e"
       abi: BrokerbotRegistry
-      startBlock: 53269607
+      startBlock: 58116009
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -118,10 +119,12 @@ dataSources:
       eventHandlers:
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
-        - event: RegisterBrokerbot(address,indexed address,indexed address)
-          handler: handleRegisterBrokerbot
-        - event: SyncBrokerbot(indexed address)
-          handler: handleSyncBrokerbot
+        - event: BrokerbotRegistered(address,indexed address,indexed address)
+          handler: handleBrokerbotRegistered
+        - event: BrokerbotSync(indexed address)
+          handler: handleBrokerbotSync
+        - event: BrokerbotDeactivated(indexed address)
+          handler: handleBrokerbotDeactivated
       file: ./src/registry.ts
 templates:
   - kind: ethereum/contract

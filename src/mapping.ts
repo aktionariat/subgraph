@@ -260,7 +260,7 @@ export function handleTrade(event: Trade): void {
     swap.avgPriceBase = convertTokenToDecimal(event.params.totPrice.div(event.params.amount.abs()), base.decimals)
   }
   swap.newPriceUSD = convertToUsd(base.id, swap.newPriceBase)
-  swap.avgPriceUSD = convertToUsd(base.id, swap.avgPriceBase)
+  swap.avgPriceUSD = convertToUsd(base.id, swap.avgPriceBase!)
   swap.newPriceCHF = convertToChf(Address.fromString(base.id), swap.newPriceBase)
   swap.avgPriceCHF = convertToChf(Address.fromString(base.id), swap.newPriceBase)
   swap.logIndex = event.logIndex

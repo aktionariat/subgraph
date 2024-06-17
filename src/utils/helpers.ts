@@ -17,7 +17,7 @@ import { Brokerbot as BrokerbotTemplate } from "../../generated/templates"
 import * as constants from "./common/constants";
 import { CustomPriceType } from "./common/types";
 import { getUsdPriceFromQuoter } from "./quoters/UniswapQuoter";
-import { RegisterBrokerbot } from '../../generated/BrokerbotRegistry/BrokerbotRegistry'
+import { BrokerbotRegistered } from '../../generated/BrokerbotRegistry/BrokerbotRegistry'
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
 export const REGISTRY_ADDRESS = Address.fromString(constants.BROKERBOT_REGISTRY_CONTRACT_ADDRESSES_MAP.get(dataSource.network())!.toHexString())
@@ -255,11 +255,12 @@ export function getRegistry(registryAddress: string): Registry {
     registry.totalRaisedUSD = ZERO_BD
     registry.liquidityCHF =  ZERO_BD
     registry.liquidityUSD =  ZERO_BD
+    registry.lastUpdate = ZERO_BI
   }
   return registry;
 }
 
-export function getEntities(event: RegisterBrokerbot  ): Entities {
+export function getEntities(event: BrokerbotRegistered  ): Entities {
   let registryAddress: Address = event.address
   let marketAddress: Address = event.params.brokerbot 
   let baseAddress: Address = event.params.base
